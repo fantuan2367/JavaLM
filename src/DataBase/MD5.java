@@ -1,17 +1,15 @@
 package DataBase;
 
-
 public class MD5{
-    //å››ä¸ªé“¾æ¥å˜é‡
+    //ËÄ¸öÁ´½Ó±äÁ¿
     private final int A=0x67452301;
     private final int B=0xefcdab89;
     private final int C=0x98badcfe;
     private final int D=0x10325476;
-    //ABCDçš„ä¸´æ—¶å˜é‡
+    //ABCDµÄÁÙÊ±±äÁ¿
     private int Atemp,Btemp,Ctemp,Dtemp;
-    
-    //å¸¸é‡ti
-    //å…¬å¼:floor(abs(sin(i+1))Ã—(2pow32)
+    //³£Á¿ti
+    //¹«Ê½:floor(abs(sin(i+1))¡Á(2pow32)
     private final int K[]={
         0xd76aa478,0xe8c7b756,0x242070db,0xc1bdceee,
         0xf57c0faf,0x4787c62a,0xa8304613,0xfd469501,0x698098d8,
@@ -26,27 +24,24 @@ public class MD5{
         0x432aff97,0xab9423a7,0xfc93a039,0x655b59c3,0x8f0ccc92,
         0xffeff47d,0x85845dd1,0x6fa87e4f,0xfe2ce6e0,0xa3014314,
         0x4e0811a1,0xf7537e82,0xbd3af235,0x2ad7d2bb,0xeb86d391};
-    
-    //å‘å·¦ä½ç§»æ•°
+    //Ïò×óÎ»ÒÆÊı
     private final int s[]={7,12,17,22,7,12,17,22,7,12,17,22,7,
         12,17,22,5,9,14,20,5,9,14,20,5,9,14,20,5,9,14,20,
         4,11,16,23,4,11,16,23,4,11,16,23,4,11,16,23,6,10,
         15,21,6,10,15,21,6,10,15,21,6,10,15,21};
-     
-    //åˆå§‹åŒ–å‡½æ•°
+    
+    //³õÊ¼»¯º¯Êı
     private void init(){
         Atemp=A;
         Btemp=B;
         Ctemp=C;
         Dtemp=D;
     }
-    
-    //ç§»åŠ¨ä¸€å®šä½æ•°
+    //ÒÆ¶¯Ò»¶¨Î»Êı
     private int shift(int a,int s){
-        return(a<<s)|(a>>>(32-s));//å³ç§»çš„æ—¶å€™ï¼Œé«˜ä½ä¸€å®šè¦è¡¥é›¶ï¼Œè€Œä¸æ˜¯è¡¥å……ç¬¦å·ä½
+        return(a<<s)|(a>>>(32-s));//ÓÒÒÆµÄÊ±ºò£¬¸ßÎ»Ò»¶¨Òª²¹Áã£¬¶ø²»ÊÇ²¹³ä·ûºÅÎ»
     }
-    
-    //ä¸»å¾ªç¯
+    //Ö÷Ñ­»·
     private void MainLoop(int M[]){
         int F,g;
         int a=Atemp;
@@ -76,33 +71,32 @@ public class MD5{
         Atemp=a+Atemp;
         Btemp=b+Btemp;
         Ctemp=c+Ctemp;
-        Dtemp=d+Dtemp;  
+        Dtemp=d+Dtemp;
+     
     }
-    
     /*
-    *å¡«å……å‡½æ•°
-    *å¤„ç†ååº”æ»¡è¶³bitsâ‰¡448(mod512),å­—èŠ‚å°±æ˜¯bytesâ‰¡56ï¼ˆmode64)
-    *å¡«å……æ–¹å¼ä¸ºå…ˆåŠ ä¸€ä¸ª0,å…¶å®ƒä½è¡¥é›¶
-    *æœ€ååŠ ä¸Š64ä½çš„åŸæ¥é•¿åº¦
+    *Ìî³äº¯Êı
+    *´¦ÀíºóÓ¦Âú×ãbits¡Ô448(mod512),×Ö½Ú¾ÍÊÇbytes¡Ô56£¨mode64)
+    *Ìî³ä·½Ê½ÎªÏÈ¼ÓÒ»¸ö0,ÆäËüÎ»²¹Áã
+    *×îºó¼ÓÉÏ64Î»µÄÔ­À´³¤¶È
     */
     private int[] add(String str){
-        int num=((str.length()+8)/64)+1;//ä»¥512ä½ï¼Œ64ä¸ªå­—èŠ‚ä¸ºä¸€ç»„
-        int strByte[]=new int[num*16];//64/4=16ï¼Œæ‰€ä»¥æœ‰16ä¸ªæ•´æ•°
-        for(int i=0;i<num*16;i++){//å…¨éƒ¨åˆå§‹åŒ–0
+        int num=((str.length()+8)/64)+1;//ÒÔ512Î»£¬64¸ö×Ö½ÚÎªÒ»×é
+        int strByte[]=new int[num*16];//64/4=16£¬ËùÒÔÓĞ16¸öÕûÊı
+        for(int i=0;i<num*16;i++){//È«²¿³õÊ¼»¯0
             strByte[i]=0;
         }
         int    i;
         for(i=0;i<str.length();i++){
-            strByte[i>>2]|=str.charAt(i)<<((i%4)*8);//ä¸€ä¸ªæ•´æ•°å­˜å‚¨å››ä¸ªå­—èŠ‚ï¼Œå°ç«¯åº
+            strByte[i>>2]|=str.charAt(i)<<((i%4)*8);//Ò»¸öÕûÊı´æ´¢ËÄ¸ö×Ö½Ú£¬Ğ¡¶ËĞò
         }
-        strByte[i>>2]|=0x80<<((i%4)*8);//å°¾éƒ¨æ·»åŠ 1
-        //æ·»åŠ åŸé•¿åº¦ï¼Œé•¿åº¦æŒ‡ä½çš„é•¿åº¦ï¼Œæ‰€ä»¥è¦ä¹˜8ï¼Œç„¶åæ˜¯å°ç«¯åºï¼Œæ‰€ä»¥æ”¾åœ¨å€’æ•°ç¬¬äºŒä¸ª,è¿™é‡Œé•¿åº¦åªç”¨äº†32ä½
+        strByte[i>>2]|=0x80<<((i%4)*8);//Î²²¿Ìí¼Ó1
+        //Ìí¼ÓÔ­³¤¶È£¬³¤¶ÈÖ¸Î»µÄ³¤¶È£¬ËùÒÔÒª³Ë8£¬È»ºóÊÇĞ¡¶ËĞò£¬ËùÒÔ·ÅÔÚµ¹ÊıµÚ¶ş¸ö,ÕâÀï³¤¶ÈÖ»ÓÃÁË32Î»
         strByte[num*16-2]=str.length()*8;
             return strByte;
     }
-    
-    //è°ƒç”¨å‡½æ•°
-    private String getMD5(String source){
+    //µ÷ÓÃº¯Êı
+    public String getMD5(String source){
         init();
         int strByte[]=add(source);
         for(int i=0;i<strByte.length/16;i++){
@@ -115,12 +109,12 @@ public class MD5{
         return changeHex(Atemp)+changeHex(Btemp)+changeHex(Ctemp)+changeHex(Dtemp);
      
     }
-    
-    //æ•´æ•°å˜æˆ16è¿›åˆ¶å­—ç¬¦ä¸²
+    //ÕûÊı±ä³É16½øÖÆ×Ö·û´®
     private String changeHex(int a){
         String str="";
         for(int i=0;i<4;i++){
             str+=String.format("%2s", Integer.toHexString(((a>>i*8)%(1<<8))&0xff)).replace(' ', '0');
+ 
         }
         return str;
     }
@@ -132,7 +126,7 @@ public class MD5{
         }
         return instance;
     }
-     
+    
     private MD5(){};
      
     public String encryptMD5(String s){

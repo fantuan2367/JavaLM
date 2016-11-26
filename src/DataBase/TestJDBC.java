@@ -1,10 +1,10 @@
 package DataBase;
 
-import java.sql.Connection;      //æ•°æ®åº“è¿æ¥å®ä¾‹
-import java.sql.DriverManager;     //æ•°æ®åº“é©±åŠ¨ç®¡ç†ç±»ï¼Œè°ƒç”¨å…¶é™æ€æ–¹æ³•getConnectionå¹¶ä¼ å…¥æ•°æ®åº“çš„URLè·å¾—æ•°æ®åº“è¿æ¥å®ä¾‹
+import java.sql.Connection;      
+import java.sql.DriverManager;     
 import java.sql.PreparedStatement;
-import java.sql.Statement;         //æ“ä½œæ•°æ®åº“è¦ç”¨åˆ°çš„ç±»ï¼Œä¸»è¦ç”¨äºæ‰§è¡ŒSQLè¯­å¥
-import java.sql.ResultSet;         //æ•°æ®åº“æŸ¥è¯¢ç»“æœé›†
+import java.sql.Statement;         
+import java.sql.ResultSet;         
 import java.sql.SQLException;
 public class TestJDBC
 {
@@ -15,7 +15,7 @@ public class TestJDBC
 	private ResultSet rs=null;
 	String table="TestTable";
 	
-	//è¿æ¥æ•°æ®åº“
+	//Êı¾İ¿âÁ¬½Ó
 	public static Connection getConnection() {
 		Connection con=null;
 		try {
@@ -29,12 +29,12 @@ public class TestJDBC
 							DataBaseUser,DataBaseKey);
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.out.println("æ•°æ®åº“è¿æ¥å¤±è´¥");
+			System.out.println("Êı¾İ¿âTestJDBCÁ¬½ÓÊ§°Ü");
 		}
 		return con;
 	}
 	
-	//å»ºç«‹æ–°ç”¨æˆ·
+	//´´½¨ĞÂÓÃ»§
 	public boolean creatNew(String username,String password){
 		conn=getConnection();
 		try {
@@ -46,13 +46,13 @@ public class TestJDBC
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
-			System.out.println("åˆ›å»ºå¤±è´¥");
+			System.out.println("´´½¨Ê§°Ü");
 			return false;
 		}
 		return true;
 	}
 	
-	//åˆ é™¤ç”¨æˆ·
+	//É¾³ıÓÃ»§
 	public boolean delete(String username){
 		conn=getConnection();
 		try {
@@ -64,12 +64,12 @@ public class TestJDBC
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
-			System.out.println("åˆ é™¤å¤±è´¥");
+			System.out.println("É¾³ıÊ§°Ü");
 			return false;
 		}
 	}
 	
-	//æŸ¥è¯¢ç”¨æˆ·
+	//ËÑË÷ÓÃ»§
 	public ResultSet search(String username){
 		conn=getConnection();
 		try {
@@ -81,12 +81,12 @@ public class TestJDBC
 		catch (SQLException e){
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			System.out.println("æŸ¥è¯¢å¤±è´¥");
+			System.out.println("ËÑË÷Ê§°Ü");
 		}
 		return rs;
 	}
 	
-	//ä¿®æ”¹å¯†ç 
+	//¸ü¸ÄÃÜÂë
 	public boolean change(String username,String password){
 		conn=getConnection();
 		try {
@@ -98,13 +98,13 @@ public class TestJDBC
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
-			System.out.println("ä¿®æ”¹å¯†ç å¤±è´¥");
+			System.out.println("¸ü¸ÄÃÜÂëÊ§°Ü");
 			return false;
 		}
 		return true;
 	}
 	
-	//æ£€éªŒç”¨æˆ·
+	//¼ìÑéÃÜÂë
 	public boolean check(String username,String userPassword) {
 		conn = getConnection();
 		boolean flag=false;
@@ -121,7 +121,7 @@ public class TestJDBC
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
-			System.out.println("æ£€éªŒç”¨æˆ·å¤±è´¥");
+			System.out.println("ÃÜÂë´íÎó");
 			return false;
 		}
 		return flag;
