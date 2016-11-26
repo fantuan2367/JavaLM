@@ -1,35 +1,37 @@
 package Reptile;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import net.sf.json.JSONObject;
 
 public class Baidu {
-	//dsasasadsda
-    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-    public String doTranslate(String keyword) {
-    	String from="en";
-    	String to="zh";
+    public static String doTranslate(String keyword) {
+    	String url=new String("http://dict.baidu.com/s?wd="+keyword);
     	String resource = null;
         try {
-            // ï¿½Ãµï¿½ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-        	Document document = Jsoup
-                    .connect("http://fanyi.baidu.com/transapi?from=" + from + "&to=" + to + "&query=" + keyword)
-                    .ignoreContentType(true).get();	
-            // ï¿½Ãµï¿½bodyï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            // µÃµ½ÍøÒ³µÄÄÚÈÝ
+        	Document document = Jsoup.connect(url)
+                    .get();	
+            // µÃµ½bodyµÄÄÚÈÝ
             resource = document.getElementsByTag("body").text().toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        // ï¿½ï¿½Ô´ï¿½ï¿½×ªï¿½ï¿½jsonobject
-        JSONObject object = JSONObject.fromObject(resource);
-        String temp = object.getString("data");
-        temp = temp.substring(1, temp.indexOf(",\"result"));
-        temp += "}";
-        JSONObject data = JSONObject.fromObject(temp);
-        // ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-        return data.getString("dst");
+        Pattern p=Pattern.compile("(.*)(¼òÃ÷ÊÍÒå )(.*)(²é¿´¸ü¶à½âÊÍ ¿Â)(.*)");
+        Matcher m=p.matcher(resource);
+		if(m.matches()){
+			StringBuffer temp=new StringBuffer(m.group(3).replaceAll(" ","\n").replaceAll("£º","\n"));
+			for(int i=0;i<temp.length();i++) {
+				if(((temp.charAt(i)<='z')&&(temp.charAt(i)>='a'))
+						&&(temp.charAt(i+1)>=300)) {
+					temp.insert(i+1, '\n');
+				}
+			}
+			return temp.toString();
+		}
+        return null;
     }
     
 }
