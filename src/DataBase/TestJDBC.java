@@ -4,7 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;     
 import java.sql.PreparedStatement;
 import java.sql.Statement;         
-import java.sql.ResultSet;         
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 public class TestJDBC
 {
@@ -127,10 +128,25 @@ public class TestJDBC
 		return flag;
 	}
 	
+	public void showAll() throws SQLException{
+		conn=getConnection();
+		Statement statement=conn.createStatement();
+		ResultSet resultSet=statement.executeQuery("select * from "+table);
+		ResultSetMetaData rsMetaData=resultSet.getMetaData();
+		for(int i=1;i<=rsMetaData.getColumnCount();i++)
+			System.out.printf("%-12s\t",rsMetaData.getColumnName(i));
+		System.out.println();;
+		while(resultSet.next()){
+			for(int i=1;i<=rsMetaData.getColumnCount();i++)
+				System.out.printf("%-12s\t",resultSet.getObject(i));
+			System.out.println();
+		}
+	}
+	
 	public static void main(String args[]) throws SQLException{
 		Values value=new Values();
 		TestJDBC kkk=new TestJDBC();
-		kkk.creatNew("2333", "sss");
+		kkk.creatNew("2343", "2ss");
 		ResultSet s=kkk.search("2333");
 		while(s.next()){
 			String s1=s.getString("username");
@@ -139,7 +155,8 @@ public class TestJDBC
 			System.out.println(s2);
 		}
 		System.out.println(kkk.check("2333", "sss"));
-		kkk.delete("2333");
+		kkk.showAll();
+		
     }
 }
         
