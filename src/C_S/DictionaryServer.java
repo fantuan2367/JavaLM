@@ -4,6 +4,9 @@ import java.net.*;
 import java.util.*;
 import javax.swing.*;
 
+import DataBase.LikeJDBC;
+import DataBase.TestJDBC;
+
 public class DictionaryServer extends JFrame{
 	
 	public static void main(String[] args){
@@ -12,20 +15,20 @@ public class DictionaryServer extends JFrame{
 	
 	public DictionaryServer(){
 		try{
-			//鍒涘缓鏈嶅姟绔繛鎺�
+			//创建连接
 			ServerSocket serverSocket=new ServerSocket(8000);
 			System.out.println("DictionaryServer started at "+new Date());
-			//鏍囪鐢ㄦ埛绔暟鐩�
+			//记录用户端数目
 			int clientNo=1;
 			
 			while(true){
-				//瀵规瘡涓繛鎺ョ殑鐢ㄦ埛绔仛鎿嶄綔
+				//连接用户端
 				Socket socket=serverSocket.accept();
 				System.out.println("Starting thread for client"+clientNo+" at "+new Date());
 				InetAddress inetAddress=socket.getInetAddress();
 				System.out.println("Client"+clientNo+"'s host name is "+inetAddress.getHostName());
 				System.out.println("Client"+clientNo+"'s IP Address is "+inetAddress.getHostAddress());
-				//涓鸿繛鎺ュ垱閫犱竴涓柊杩涚▼
+				//建立线程运行用户端
 				HandleAClient task=new HandleAClient(socket);
 				new Thread(task).start();
 				clientNo++;
@@ -36,29 +39,59 @@ public class DictionaryServer extends JFrame{
 		}
 	}
 	
-	//鐢ㄤ簬澶勭悊鏂拌繛鎺ョ殑杩涚▼绫�
+	//定义一个线程来运行用户端
 	class HandleAClient implements Runnable{
 		private Socket socket;
 		
-		//鍒涘缓杩涚▼
+		//创建线程
 		public HandleAClient(Socket socket){
 			this.socket=socket;
 		}
 		
-		//
+		//运行
 		public void run(){
 			try{
 				DataInputStream inputFromClient=new DataInputStream(socket.getInputStream());
 				DataOutputStream outputToClient=new DataOutputStream(socket.getOutputStream());
-				
+				TestJDBC DataBase=new TestJDBC();
+				LikeJDBC LikeBase=new LikeJDBC();
 				while(true){
-					//鏈嶅姟绔鐞嗙敤鎴风杩斿洖鏁版嵁骞惰繑鍥炲��
-					double r=inputFromClient.readDouble();
-					double area=r*r*Math.PI;
-					outputToClient.writeDouble(area);
-					System.out.println("radius received from client: "+r);
-					System.out.println("area found: "+area);
-					//
+					//信息交换
+					System.out.println("open");
+					int commandType=inputFromClient.readInt();
+					
+					switch(commandType){
+					case 1:{//登录
+						String username=inputFromClient.readUTF();
+						String password=inputFromClient.readUTF();
+						outputToClient.writeBoolean(DataBase.check(username, password));
+					}break;
+					case 2:{//注册
+						String username=inputFromClient.readUTF();
+						String password=inputFromClient.readUTF();
+						outputToClient.writeBoolean(DataBase.creatNew(username, password));
+					}break;
+					case 3:{//删除
+						String username=inputFromClient.readUTF();
+						outputToClient.writeBoolean(DataBase.delete(username));
+					}break;
+					case 4:{//改密码
+						String username=inputFromClient.readUTF();
+						String password=inputFromClient.readUTF();
+						outputToClient.writeBoolean(DataBase.change(username, password));
+					}break;
+					case 5:{//点赞
+						String selection=inputFromClient.readUTF();
+						if(selection.equals("baidu"))
+							LikeBase.add("baidu");
+						else if(selection.equals("youdao"))
+							LikeBase.add("youdao");
+						else if(selection.equals("bing"))
+							LikeBase.add("bing");
+						else System.out.println("error in selection");
+					}
+					default:System.out.println("xxx");break;
+					}
 				}
 			}
 			catch(IOException e){
