@@ -50,7 +50,7 @@ public class DictionaryClient extends JFrame{
 						ui.setVisible(false);
 						ui_main.setVisible(true);
 					}
-					else JOptionPane.showMessageDialog(null, "密码错误", "error", JOptionPane.ERROR_MESSAGE);
+					else JOptionPane.showMessageDialog(null, "用户名或密码错误", "error", JOptionPane.ERROR_MESSAGE);
 					
 				}
 				catch(IOException ex){
@@ -82,6 +82,29 @@ public class DictionaryClient extends JFrame{
 			}
 		});
 		
+		//修改密码按钮监听
+		ui_main.button_passwd_change.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ui_main.setVisible(false);
+				ui_passwd_change.setVisible(true);
+			}
+		});
+		//修改密码确认监听
+		ui_passwd_change.change_yes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//确认操作
+			}
+		});
+		//修改密码取消监听
+		ui_passwd_change.change_no.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ui_main.setVisible(true);
+				ui_passwd_change.passwd_change_once.setText("");
+				ui_passwd_change.passwd_change_twice.setText("");
+				ui_passwd_change.setVisible(false);
+			}
+		});		
+		
 		//点赞功能
 		ui_main.button_like_baidu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
@@ -111,7 +134,7 @@ public class DictionaryClient extends JFrame{
 				}
 			}
 		});
-		ui_main.button_like_bing.addActionListener(new ActionListener(){
+		ui_main.button_like_Iciba.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
 				try{
 					int commandType=5;
@@ -126,7 +149,4 @@ public class DictionaryClient extends JFrame{
 			}
 		});
 	}
-	
-	
-	
 }
