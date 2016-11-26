@@ -1,35 +1,37 @@
 package Reptile;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import net.sf.json.JSONObject;
 
 public class Baidu {
-	
-    // 请求函数
     public static String doTranslate(String keyword) {
-    	String from="en";
-    	String to="zh";
+    	String url=new String("http://dict.baidu.com/s?wd="+keyword);
     	String resource = null;
         try {
             // 得到网页的内容
-        	Document document = Jsoup
-                    .connect("http://fanyi.baidu.com/transapi?from=" + from + "&to=" + to + "&query=" + keyword)
-                    .ignoreContentType(true).get();	
+        	Document document = Jsoup.connect(url)
+                    .get();	
             // 得到body的内容
             resource = document.getElementsByTag("body").text().toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        // 将源码转成jsonobject
-        JSONObject object = JSONObject.fromObject(resource);
-        String temp = object.getString("data");
-        temp = temp.substring(1, temp.indexOf(",\"result"));
-        temp += "}";
-        JSONObject data = JSONObject.fromObject(temp);
-        // 得到翻译后的内容
-        return data.getString("dst");
+        Pattern p=Pattern.compile("(.*)(简明释义 )(.*)(查看更多解释 柯)(.*)");
+        Matcher m=p.matcher(resource);
+		if(m.matches()){
+			StringBuffer temp=new StringBuffer(m.group(3).replaceAll(" ","\n").replaceAll("：","\n"));
+			for(int i=0;i<temp.length();i++) {
+				if(((temp.charAt(i)<='z')&&(temp.charAt(i)>='a'))
+						&&(temp.charAt(i+1)>=300)) {
+					temp.insert(i+1, '\n');
+				}
+			}
+			return temp.toString();
+		}
+        return null;
     }
     
 }
