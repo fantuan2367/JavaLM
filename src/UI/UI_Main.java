@@ -1,3 +1,4 @@
+package UI;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -6,6 +7,10 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+
+import Reptile.Baidu;
+import Reptile.Iciba;
+import Reptile.Youdao;
 public class UI_Main extends JFrame{
 	private JTextField input=new JTextField();
 	private JButton search_button=new JButton("≤È—Ø");
@@ -100,13 +105,19 @@ public class UI_Main extends JFrame{
 		//≤È—Ø∞¥≈•º‡Ã˝
 		search_button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String content=input.getText();
+				text_baidu.setText("");
+				text_youdao.setText("");
+				text_bing.setText("");
 				if(check_baidu.isSelected()) {
-					text_baidu.setText(baidu.doTranslate(input.getText()));
+					text_baidu.setText(baidu.doTranslate(content));
 				}
 				if(check_youdao.isSelected()) {
+					text_youdao.setText(Youdao.doTranslate(content));
 					
 				}
 				if(check_bing.isSelected()) {
+					text_bing.setText(Iciba.doTranslate(content));
 					
 				}
 			}

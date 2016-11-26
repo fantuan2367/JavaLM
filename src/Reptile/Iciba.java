@@ -1,0 +1,34 @@
+package Reptile;
+import java.io.IOException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class Iciba {
+	
+    // 请求函数
+    public static String doTranslate(String keyword) {
+    	String resource = null;
+        try {
+            // 得到网页的内容
+        	Document document = Jsoup
+                    .connect("http://dict-co.iciba.com/api/dictionary.php?w="+keyword+"&key=4AAC6F23945055569DC8AFB098632EF7")
+                    .ignoreContentType(true).get();	
+            // 得到body的内容
+            resource = document.getElementsByTag("body").text().toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        //正则表达式确定范围
+        Pattern p=Pattern.compile("(.*)(\\.mp3 )(.*)(；)(.*)");
+        Matcher m=p.matcher(resource);
+		if(m.matches()){
+			return m.group(3)+"；";
+		}
+		
+		return null;
+    }
+}
