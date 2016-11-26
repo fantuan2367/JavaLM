@@ -8,25 +8,25 @@ import java.util.regex.Pattern;
 
 public class Iciba {
 	
-    // è¯·æ±‚å‡½æ•°
+    // ÇëÇóº¯Êı
     public static String doTranslate(String keyword) {
     	String resource = null;
         try {
-            // å¾—åˆ°ç½‘é¡µçš„å†…å®¹
+            // µÃµ½ÍøÒ³µÄÄÚÈİ
         	Document document = Jsoup
                     .connect("http://dict-co.iciba.com/api/dictionary.php?w="+keyword+"&key=4AAC6F23945055569DC8AFB098632EF7")
                     .ignoreContentType(true).get();	
-            // å¾—åˆ°bodyçš„å†…å®¹
+            // µÃµ½bodyµÄÄÚÈİ
             resource = document.getElementsByTag("body").text().toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
         
-        //æ­£åˆ™è¡¨è¾¾å¼ç¡®å®šèŒƒå›´
-        Pattern p=Pattern.compile("(.*)(\\.mp3 )(.*)(ï¼›)(.*)");
+        //ÕıÔò±í´ïÊ½È·¶¨·¶Î§
+        Pattern p=Pattern.compile("(.*)(\\.mp3 )(.*)(£»)(.*)");
         Matcher m=p.matcher(resource);
 		if(m.matches()){
-			return m.group(3)+"ï¼›";
+			return m.group(3)+"£»";
 		}
 		
 		return null;

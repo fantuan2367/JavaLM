@@ -5,30 +5,30 @@ import org.jsoup.nodes.Document;
 import net.sf.json.JSONObject;
 
 public class Baidu {
-	//dsasasadsda
-    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-    public String doTranslate(String keyword) {
+	
+    // ÇëÇóº¯Êý
+    public static String doTranslate(String keyword) {
     	String from="en";
     	String to="zh";
     	String resource = null;
         try {
-            // ï¿½Ãµï¿½ï¿½ï¿½Ò³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            // µÃµ½ÍøÒ³µÄÄÚÈÝ
         	Document document = Jsoup
                     .connect("http://fanyi.baidu.com/transapi?from=" + from + "&to=" + to + "&query=" + keyword)
                     .ignoreContentType(true).get();	
-            // ï¿½Ãµï¿½bodyï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+            // µÃµ½bodyµÄÄÚÈÝ
             resource = document.getElementsByTag("body").text().toString();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // ï¿½ï¿½Ô´ï¿½ï¿½×ªï¿½ï¿½jsonobject
+        // ½«Ô´Âë×ª³Éjsonobject
         JSONObject object = JSONObject.fromObject(resource);
         String temp = object.getString("data");
         temp = temp.substring(1, temp.indexOf(",\"result"));
         temp += "}";
         JSONObject data = JSONObject.fromObject(temp);
-        // ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        // µÃµ½·­ÒëºóµÄÄÚÈÝ
         return data.getString("dst");
     }
     
