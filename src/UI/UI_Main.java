@@ -23,15 +23,16 @@ public class UI_Main extends JFrame{
 	private JTextArea text_baidu=new JTextArea();
 	private JTextArea text_youdao=new JTextArea();
 	private JTextArea text_bing=new JTextArea();
-	private JButton button_like_baidu=new JButton("百度√");
-	private JButton button_like_youdao=new JButton("有道√");
-	private JButton button_like_bing=new JButton("Bing√");
+	public JButton button_like_baidu=new JButton("百度√");
+	public JButton button_like_youdao=new JButton("有道√");
+	public JButton button_like_bing=new JButton("Bing√");
 	public UI_Main(){
 		setTitle("Net Dictionary");
 		setSize(600,820);
 		setLocationRelativeTo(null);
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setVisible(false);
 		JPanel content_panel=new JPanel();
 		content_panel.setBorder(new EmptyBorder(5, 5, 5, 5));//设置周围的空白边界
 		setContentPane(content_panel);

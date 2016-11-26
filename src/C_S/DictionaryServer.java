@@ -57,7 +57,6 @@ public class DictionaryServer extends JFrame{
 				LikeJDBC LikeBase=new LikeJDBC();
 				while(true){
 					//信息交换
-					System.out.println("open");
 					int commandType=inputFromClient.readInt();
 					
 					switch(commandType){
