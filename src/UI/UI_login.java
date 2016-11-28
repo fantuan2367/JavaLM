@@ -6,14 +6,15 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 public class UI_login extends JFrame {
 	private JTextField name_hint=new JTextField("ÓÃ»§Ãû£º");
 	private JTextField passwd_hint=new JTextField("ÃÜÂë£º");
+	public JPasswordField passwd_input=new JPasswordField();
 	public JTextField name_input=new JTextField();
-	public JTextField passwd_input=new JTextField();
 	public JButton sign_in=new JButton("µÇÂ¼");
 	public JButton sign_up=new JButton("×¢²á");
 	public UI_login() {

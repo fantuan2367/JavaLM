@@ -120,10 +120,93 @@ public class LikeJDBC {
 		return true;
 	}
 	
+	public int[] getOrder(){
+		conn=getConnection();
+		int[] order=new int[3];
+		try {
+		    String sql="select * from "+table+" where name=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1,"baidu");
+			System.out.println(pstmt);
+			rs=pstmt.executeQuery();
+			String s="";
+			int temp1=0;
+			while(rs.next()){
+				s=rs.getString("name");
+				temp1=rs.getInt(2);
+			}
+			
+			
+			sql="select * from "+table+" where name=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1,"youdao");
+			rs=pstmt.executeQuery();
+			int temp2=0;
+			while(rs.next()){
+				s=rs.getString("name");
+				temp2=rs.getInt(2);
+			}
+			
+			
+			
+			sql="select * from "+table+" where name=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1,"bing");
+			rs=pstmt.executeQuery();
+			int temp3=0;
+			while(rs.next()){
+				s=rs.getString("name");
+				temp3=rs.getInt(2);
+			}
+			
+			if(temp3>=temp2)
+			    if(temp3>=temp1){
+			        order[2]=1;//1指第一个显示，2指bing
+			        if(temp1>=temp2){
+			            order[0]=2;
+			            order[1]=3;
+			        }
+			        else{
+			            order[0]=3;
+			            order[1]=2;
+			        }
+			    }
+			    else{
+			        order[0]=1;
+			        order[2]=2;
+			        order[1]=3;
+			    }
+		    else if(temp2>=temp1){
+		        order[1]=1;
+		        if(temp1>=temp3){
+		            order[0]=2;
+		            order[2]=3;
+		        }
+		        else{
+		            order[0]=3;
+		            order[2]=2;
+		        }
+		    }
+		    else{
+		        order[0]=1;
+		        order[1]=2;
+		        order[2]=3;
+		    }
+		            
+		}
+		catch (SQLException e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("搜索失败");
+		}
+		return order;
+	}
+	
 	public static void main(String args[]) throws SQLException, ClassNotFoundException{
 		LikeJDBC A=new LikeJDBC();
 		A.add("baidu");
-		A.showAll();
+		//A.showAll();
+		//System.out.println(A.getOrder()[2]);
 	}
 
 }

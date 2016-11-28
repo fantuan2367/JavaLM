@@ -1,32 +1,31 @@
 package UI;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
-import Reptile.Baidu;
-import Reptile.Iciba;
-import Reptile.Youdao;
 public class UI_Main extends JFrame{
-	private JTextField input=new JTextField();
-	private JButton search_button=new JButton("查询");
-	private JScrollPane scroll_baidu=new JScrollPane();
-	private JScrollPane scroll_youdao=new JScrollPane();
-	private JScrollPane scroll_Iciba=new JScrollPane();
-	private JCheckBox check_baidu=new JCheckBox("百度");
-	private JCheckBox check_youdao=new JCheckBox("有道");
-	private JCheckBox check_Iciba=new JCheckBox("Iciba");
-	private JTextArea text_baidu=new JTextArea();
-	private JTextArea text_youdao=new JTextArea();
-	private JTextArea text_Iciba=new JTextArea();
+	public JTextField input=new JTextField();
+	public JButton search_button=new JButton("查询");
+	private JScrollPane scroll_1=new JScrollPane();
+	private JScrollPane scroll_2=new JScrollPane();
+	private JScrollPane scroll_3=new JScrollPane();
+	public JCheckBox check_baidu=new JCheckBox("百度");
+	public JCheckBox check_youdao=new JCheckBox("有道");
+	public JCheckBox check_Iciba=new JCheckBox("Iciba");
+	public JTextArea text_1=new JTextArea();
+	public JTextArea text_2=new JTextArea();
+	public JTextArea text_3=new JTextArea();
+	public JTextArea text_name1=new JTextArea("");
+	public JTextArea text_name2=new JTextArea("");
+	public JTextArea text_name3=new JTextArea("");
 	public JButton button_passwd_change=new JButton("修改密码");
 	public JButton button_like_baidu=new JButton("百度√");
 	public JButton button_like_youdao=new JButton("有道√");
 	public JButton button_like_Iciba=new JButton("Iciba√");
+	
 	public UI_Main(){
 		setTitle("Net Dictionary");
 		setSize(600,820);
@@ -69,37 +68,43 @@ public class UI_Main extends JFrame{
 		check_Iciba.setSelected(true);
 		panel_choice.add(check_Iciba);
 		
-		
+		Border border=BorderFactory.createTitledBorder("");
 		//翻译面板
-		JPanel panel_baidu=new JPanel();
-		panel_baidu.setBounds(10,150, 570,190);
-		Border border_baidu=BorderFactory.createTitledBorder("百度");
-		panel_baidu.setBorder(border_baidu);
-		content_panel.add(panel_baidu);
-		panel_baidu.setLayout(new BorderLayout());
-		panel_baidu.add(scroll_baidu);
-		scroll_baidu.add(text_baidu);
-		scroll_baidu.setViewportView(text_baidu);
+		JPanel panel_1=new JPanel();
+		panel_1.setBounds(10,150, 570,190);
+		panel_1.setBorder(border);
+		content_panel.add(panel_1);
+		panel_1.setLayout(new BorderLayout());
+		panel_1.add(scroll_1,BorderLayout.CENTER);
+		panel_1.add(text_name1,BorderLayout.NORTH);
+		scroll_1.add(text_1);
+		scroll_1.setViewportView(text_1);
+		text_name1.setEditable(false);
+		text_1.setEditable(false);
 		//有道面板
-		JPanel panel_youdao=new JPanel();
-		panel_youdao.setBounds(10,340, 570,190);
-		Border border_youdao=BorderFactory.createTitledBorder("有道");
-		panel_youdao.setBorder(border_youdao);
-		content_panel.add(panel_youdao);
-		panel_youdao.setLayout(new BorderLayout());
-		panel_youdao.add(scroll_youdao);
-		scroll_youdao.add(text_youdao);
-		scroll_youdao.setViewportView(text_youdao);
+		JPanel panel_2=new JPanel();
+		panel_2.setBounds(10,340, 570,180);
+		panel_2.setBorder(border);
+		content_panel.add(panel_2);
+		panel_2.setLayout(new BorderLayout());
+		panel_2.add(scroll_2,BorderLayout.CENTER);
+		panel_2.add(text_name2,BorderLayout.NORTH);
+		scroll_2.add(text_2);
+		scroll_2.setViewportView(text_2);
+		text_name2.setEditable(false);
+		text_2.setEditable(false);
 		//Iciba面板
-		JPanel panel_Iciba=new JPanel();
-		panel_Iciba.setBounds(10,530, 570,190);
-		Border border_Iciba=BorderFactory.createTitledBorder("Iciba");
-		panel_Iciba.setBorder(border_Iciba);
-		content_panel.add(panel_Iciba);
-		panel_Iciba.setLayout(new BorderLayout());
-		panel_Iciba.add(scroll_Iciba);
-		scroll_Iciba.add(text_Iciba);
-		scroll_Iciba.setViewportView(text_Iciba);
+		JPanel panel_3=new JPanel();
+		panel_3.setBounds(10,530, 570,180);
+		panel_3.setBorder(border);
+		content_panel.add(panel_3);
+		panel_3.setLayout(new BorderLayout());
+		panel_3.add(scroll_3,BorderLayout.CENTER);
+		panel_3.add(text_name3,BorderLayout.NORTH);
+		scroll_3.add(text_3);
+		scroll_3.setViewportView(text_3);
+		text_name3.setEditable(false);
+		text_3.setEditable(false);
 		//点赞面板
 		JPanel panel_like=new JPanel();
 		panel_like.setBounds(10, 730, 570, 50);
@@ -111,27 +116,6 @@ public class UI_Main extends JFrame{
 		panel_like.add(button_like_youdao);
 		button_like_Iciba.setFocusPainted(false);
 		panel_like.add(button_like_Iciba);
-		
-		//查询按钮监听
-		search_button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String content=input.getText();
-				text_baidu.setText("");
-				text_youdao.setText("");
-				text_Iciba.setText("");
-				if(check_baidu.isSelected()) {
-					text_baidu.setText(Baidu.doTranslate(content));
-				}
-				if(check_youdao.isSelected()) {
-					text_youdao.setText(Youdao.doTranslate(content));
-					
-				}
-				if(check_Iciba.isSelected()) {
-					text_Iciba.setText(Iciba.doTranslate(content));
-					
-				}
-			}
-		});
 		
 		//窗体设置为可见
 		setVisible(false);
