@@ -88,8 +88,14 @@ public class DictionaryServer extends JFrame{
 						else if(selection.equals("bing"))
 							LikeBase.add("bing");
 						else System.out.println("error in selection");
-					}
-					default:System.out.println("xxx");break;
+					}break;
+					case 6:{//对三个内容排序
+						int[] order=LikeBase.getOrder();
+						outputToClient.writeInt(order[0]);
+						outputToClient.writeInt(order[1]);
+						outputToClient.writeInt(order[2]);
+					}break;
+					default:System.out.println("error in ServerLike");break;
 					}
 				}
 			}

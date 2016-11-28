@@ -6,14 +6,15 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 public class UI_Passwd_Change extends JFrame {
 	private JTextField passwd_change_first=new JTextField("新密码：");
 	private JTextField passwd_change_second=new JTextField("重新输入新密码：");
-	public JTextField passwd_change_once=new JTextField();
-	public JTextField passwd_change_twice=new JTextField();
+	public JPasswordField passwd_change_once=new JPasswordField();
+	public JPasswordField passwd_change_twice=new JPasswordField();
 	public JButton change_yes=new JButton("确认");
 	public JButton change_no=new JButton("取消");
 	public UI_Passwd_Change() {
@@ -45,7 +46,7 @@ public class UI_Passwd_Change extends JFrame {
 		
 		//设置输入面板
 		JPanel panel_input=new JPanel();
-		panel_input.setBounds(80, 10,200,60);
+		panel_input.setBounds(80,10,200,60);
 		content_panel.add(panel_input);
 		panel_input.setLayout(new BorderLayout());
 		//加入用户名输入栏

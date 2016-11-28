@@ -127,7 +127,7 @@ public class MD5{
         return instance;
     }
     
-    private MD5(){};
+    public MD5(){};
      
     public String encryptMD5(String s){
         String str=MD5.getInstance().getMD5(s);
