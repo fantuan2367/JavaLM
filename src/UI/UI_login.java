@@ -15,6 +15,7 @@ public class UI_login extends JFrame {
 	private JTextField passwd_hint=new JTextField("密码：");
 	public JPasswordField passwd_input=new JPasswordField();
 	public JTextField name_input=new JTextField();
+	public JButton tourist=new JButton("游客登录");
 	public JButton sign_in=new JButton("登录");
 	public JButton sign_up=new JButton("注册");
 	public UI_login() {
@@ -60,6 +61,7 @@ public class UI_login extends JFrame {
 		content_panel.add(panel_button);
 		//加入按钮
 		panel_button.add(sign_in,BorderLayout.WEST);
+		panel_button.add(tourist,BorderLayout.CENTER);
 		panel_button.add(sign_up,BorderLayout.EAST);
 		
 		//窗体设置为可见

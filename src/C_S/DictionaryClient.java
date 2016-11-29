@@ -51,6 +51,18 @@ public class DictionaryClient extends JFrame{
 			System.out.println("error in dictionaryClient");
 		}
 		
+		//游客登录按钮监听
+		ui.tourist.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ui.setVisible(false);
+				ui_main.button_like_baidu.setEnabled(false);
+				ui_main.button_like_youdao.setEnabled(false);
+				ui_main.button_like_Iciba.setEnabled(false);
+				ui_main.button_passwd_change.setEnabled(false);
+				ui_main.setVisible(true);
+			}
+		});
+		
 		//登录按钮监听
 		ui.sign_in.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -69,6 +81,10 @@ public class DictionaryClient extends JFrame{
 					if(judge){
 						ui.setVisible(false);
 						ui_main.setVisible(true);
+						ui_main.button_like_baidu.setEnabled(true);
+						ui_main.button_like_youdao.setEnabled(true);
+						ui_main.button_like_Iciba.setEnabled(true);
+						ui_main.button_passwd_change.setEnabled(true);
 					}
 					else JOptionPane.showMessageDialog(null, "用户名或密码错误", "error", JOptionPane.ERROR_MESSAGE);
 					
@@ -168,6 +184,17 @@ public class DictionaryClient extends JFrame{
 			}
 		});	
 		
+		//登录注册按钮监听
+		ui_main.button_log.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ui.setVisible(true);
+				ui_main.setVisible(false);
+				ui_main.input.setText("");
+				ui_main.text_1.setText("");
+				ui_main.text_2.setText("");
+				ui_main.text_3.setText("");
+			}
+		});
 
 		//查询按钮监听		
 		ui_main.search_button.addActionListener(new ActionListener() {
@@ -245,7 +272,7 @@ public class DictionaryClient extends JFrame{
 				}
 			}
 		});
-		
+
 		//点赞功能
 		ui_main.button_like_baidu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
