@@ -1,14 +1,21 @@
 package C_S;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.*;
+import java.sql.SQLException;
 import java.util.*;
 import javax.swing.*;
 
 import DataBase.LikeJDBC;
 import DataBase.TestJDBC;
+import DataBase.Values;
+import UI.UI_Server;
 
 public class DictionaryServer extends JFrame{
-	
+	TestJDBC DataBase=new TestJDBC();
+	LikeJDBC LikeBase=new LikeJDBC();
+	UI_Server ui_server;
 	public static void main(String[] args){
 		new DictionaryServer();
 	}
@@ -18,8 +25,19 @@ public class DictionaryServer extends JFrame{
 			//创建连接
 			ServerSocket serverSocket=new ServerSocket(8000);
 			System.out.println("DictionaryServer started at "+new Date());
-			//记录用户端数目
+			//记录用户端数目,刷新界面
 			int clientNo=1;
+			try{
+				Values[] value=DataBase.showAll();
+				ui_server=new UI_Server(value);
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+			ui_server.right_times_change(0,LikeBase.getLikeTimes("baidu"));
+			ui_server.right_times_change(1,LikeBase.getLikeTimes("youdao"));
+			ui_server.right_times_change(2,LikeBase.getLikeTimes("bing"));
 			
 			while(true){
 				//连接用户端
@@ -37,8 +55,21 @@ public class DictionaryServer extends JFrame{
 		catch(IOException ex){
 			System.err.println(ex);
 		}
-	}
+		
+		ui_server.clear_liketable.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				LikeBase.clear();
+				LikeBase.creatTable();
+			}
+		});
+		
+		ui_server.button_delete_user.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				
+			}
+		});
 	
+	}
 	//定义一个线程来运行用户端
 	class HandleAClient implements Runnable{
 		private Socket socket;
@@ -53,8 +84,7 @@ public class DictionaryServer extends JFrame{
 			try{
 				DataInputStream inputFromClient=new DataInputStream(socket.getInputStream());
 				DataOutputStream outputToClient=new DataOutputStream(socket.getOutputStream());
-				TestJDBC DataBase=new TestJDBC();
-				LikeJDBC LikeBase=new LikeJDBC();
+				
 				while(true){
 					//信息交换
 					int commandType=inputFromClient.readInt();
@@ -63,16 +93,26 @@ public class DictionaryServer extends JFrame{
 					case 1:{//登录
 						String username=inputFromClient.readUTF();
 						String password=inputFromClient.readUTF();
-						outputToClient.writeBoolean(DataBase.check(username, password));
+						boolean bool=DataBase.check(username,password);
+						if(bool)
+							ui_server.left_passwd_Online(username);
+						outputToClient.writeBoolean(bool);
 					}break;
 					case 2:{//注册
 						String username=inputFromClient.readUTF();
 						String password=inputFromClient.readUTF();
-						outputToClient.writeBoolean(DataBase.creatNew(username, password));
+						boolean bool=DataBase.creatNew(username, password);
+						if(bool)
+							ui_server.left_passwd_Add(username);
+						outputToClient.writeBoolean(bool);
 					}break;
 					case 3:{//删除
 						String username=inputFromClient.readUTF();
-						outputToClient.writeBoolean(DataBase.delete(username));
+						boolean bool=DataBase.delete(username);
+						if(bool)
+							ui_server.left_passwd_Remove(username);
+						outputToClient.writeBoolean(bool);
+						
 					}break;
 					case 4:{//改密码
 						String username=inputFromClient.readUTF();
@@ -88,6 +128,10 @@ public class DictionaryServer extends JFrame{
 						else if(selection.equals("bing"))
 							LikeBase.add("bing");
 						else System.out.println("error in selection");
+						//点赞之后刷新界面
+						ui_server.right_times_change(0,LikeBase.getLikeTimes("baidu"));
+						ui_server.right_times_change(1,LikeBase.getLikeTimes("youdao"));
+						ui_server.right_times_change(2,LikeBase.getLikeTimes("bing"));
 					}break;
 					case 6:{//对三个内容排序
 						int[] order=LikeBase.getOrder();

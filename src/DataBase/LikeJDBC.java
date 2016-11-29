@@ -120,6 +120,28 @@ public class LikeJDBC {
 		return true;
 	}
 	
+	public int getLikeTimes(String s){
+		conn=getConnection();
+		int temp1=0;
+		try {
+		    String sql="select * from "+table+" where name=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1,s);
+			rs=pstmt.executeQuery();
+			while(rs.next()){
+				String stemp=rs.getString("name");
+				temp1=rs.getInt(2);
+			}
+		}
+		catch (SQLException e){
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("ªÒ»°µ„‘ﬁ ß∞‹");
+		}
+		return temp1;
+	}
+	
+	
 	public int[] getOrder(){
 		conn=getConnection();
 		int[] order=new int[3];
@@ -135,8 +157,7 @@ public class LikeJDBC {
 				s=rs.getString("name");
 				temp1=rs.getInt(2);
 			}
-			
-			
+	
 			sql="select * from "+table+" where name=?";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1,"youdao");
@@ -146,8 +167,6 @@ public class LikeJDBC {
 				s=rs.getString("name");
 				temp2=rs.getInt(2);
 			}
-			
-			
 			
 			sql="select * from "+table+" where name=?";
 			pstmt=conn.prepareStatement(sql);

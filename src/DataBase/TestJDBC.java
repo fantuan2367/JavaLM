@@ -39,10 +39,11 @@ public class TestJDBC
 	public boolean creatNew(String username,String password){
 		conn=getConnection();
 		try {
-			String sql="insert into "+table+" (username,password) values (?,?)";
+			String sql="insert into "+table+" (username,password,online) values (?,?,?)";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1,username);
 			pstmt.setString(2,password);
+			pstmt.setInt(3,0);
 			pstmt.executeUpdate();
 		}
 		catch (SQLException e) {
@@ -115,9 +116,13 @@ public class TestJDBC
 			pstmt.setString(1,username);
 			pstmt.setString(2,userPassword);
 			rs=pstmt.executeQuery();
-			if(rs.next())
-			{
-			flag=true;
+			if(rs.next()){
+				flag=true;
+				sql="update "+table+" set online=? where username=?";
+				pstmt=conn.prepareStatement(sql);
+				pstmt.setInt(1,1);
+				pstmt.setString(2,username);
+				pstmt.executeUpdate();
 			}
 		}
 		catch (SQLException e) {
@@ -128,25 +133,39 @@ public class TestJDBC
 		return flag;
 	}
 	
-	public void showAll() throws SQLException{
+	public Values[] showAll() throws SQLException{
 		conn=getConnection();
 		Statement statement=conn.createStatement();
 		ResultSet resultSet=statement.executeQuery("select * from "+table);
-		ResultSetMetaData rsMetaData=resultSet.getMetaData();
-		for(int i=1;i<=rsMetaData.getColumnCount();i++)
-			System.out.printf("%-12s\t",rsMetaData.getColumnName(i));
-		System.out.println();;
+		int count=0;//获得表中列数
 		while(resultSet.next()){
-			for(int i=1;i<=rsMetaData.getColumnCount();i++)
-				System.out.printf("%-12s\t",resultSet.getObject(i));
-			System.out.println();
+			count++;
 		}
+		resultSet=statement.executeQuery("select * from "+table);
+		ResultSetMetaData rsMetaData=resultSet.getMetaData();
+		Values[] value=new Values[count];
+		count=0;
+		while(resultSet.next()){
+			String s1=null;
+			String s2=null;
+			int s3=0;
+			for(int i=1;i<=rsMetaData.getColumnCount();i++)
+				switch(i){
+				case 1:s1=resultSet.getString(i);break;
+				case 2:s2=resultSet.getString(i);break;
+				case 3:s3=resultSet.getInt(i);break;
+				default:break;
+				}
+			value[count]=new Values(s1,s2,s3);
+			count++;
+		}
+		return value;
 	}
 	
 	public static void main(String args[]) throws SQLException{
 		Values value=new Values();
 		TestJDBC kkk=new TestJDBC();
-		kkk.creatNew("2343", "2ss");
+		//kkk.creatNew("2343", "2ss");
 		ResultSet s=kkk.search("2333");
 		while(s.next()){
 			String s1=s.getString("username");
