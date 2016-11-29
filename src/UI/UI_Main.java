@@ -21,6 +21,9 @@ public class UI_Main extends JFrame{
 	public JTextArea text_name1=new JTextArea("");
 	public JTextArea text_name2=new JTextArea("");
 	public JTextArea text_name3=new JTextArea("");
+	public JButton button_log=new JButton("登录/注册");
+	public JButton button_send_card=new JButton("发送单词卡");
+	public JButton button_receive_card=new JButton("接受单词卡");
 	public JButton button_passwd_change=new JButton("修改密码");
 	public JButton button_like_baidu=new JButton("百度√");
 	public JButton button_like_youdao=new JButton("有道√");
@@ -47,11 +50,14 @@ public class UI_Main extends JFrame{
 		panel_input.add(search_button, BorderLayout.EAST);
 		
 		//修改密码面板
-		JPanel panel_passwd_change=new JPanel();
-		panel_passwd_change.setBounds(10, 50, 570, 30);
-		content_panel.add(panel_passwd_change);
-		panel_passwd_change.setLayout(new BorderLayout(20,0));
-		panel_passwd_change.add(button_passwd_change,BorderLayout.EAST);
+		JPanel panel_account=new JPanel();
+		panel_account.setBounds(10, 50, 570, 30);
+		content_panel.add(panel_account);
+		panel_account.setLayout(new GridLayout(1, 4,30,0));
+		panel_account.add(button_log);
+		panel_account.add(button_send_card);
+		panel_account.add(button_receive_card);
+		panel_account.add(button_passwd_change);
 		
 		//复选框面板
 		JPanel panel_choice=new JPanel();
@@ -76,7 +82,7 @@ public class UI_Main extends JFrame{
 		content_panel.add(panel_1);
 		panel_1.setLayout(new BorderLayout());
 		panel_1.add(scroll_1,BorderLayout.CENTER);
-		text_name1.setBorder(null);
+		text_name1.setBorder(BorderFactory.createEmptyBorder());
 		text_name1.setOpaque(false);
 		panel_1.add(text_name1,BorderLayout.NORTH);
 		scroll_1.add(text_1);
@@ -90,7 +96,7 @@ public class UI_Main extends JFrame{
 		content_panel.add(panel_2);
 		panel_2.setLayout(new BorderLayout());
 		panel_2.add(scroll_2,BorderLayout.CENTER);
-		text_name2.setBorder(null);
+		text_name2.setBorder(BorderFactory.createEmptyBorder());
 		text_name2.setOpaque(false);
 		panel_2.add(text_name2,BorderLayout.NORTH);
 		scroll_2.add(text_2);
@@ -104,7 +110,7 @@ public class UI_Main extends JFrame{
 		content_panel.add(panel_3);
 		panel_3.setLayout(new BorderLayout());
 		panel_3.add(scroll_3,BorderLayout.CENTER);
-		text_name3.setBorder(null);
+		text_name3.setBorder(BorderFactory.createEmptyBorder());
 		text_name3.setOpaque(false);
 		panel_3.add(text_name3,BorderLayout.NORTH);
 		scroll_3.add(text_3);
