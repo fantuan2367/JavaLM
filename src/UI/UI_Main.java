@@ -22,6 +22,8 @@ public class UI_Main extends JFrame{
 	public JTextArea text_name2=new JTextArea("");
 	public JTextArea text_name3=new JTextArea("");
 	public JButton button_log=new JButton("登录/注册");
+	public JButton button_send_card=new JButton("发送单词卡");
+	public JButton button_receive_card=new JButton("接受单词卡");
 	public JButton button_passwd_change=new JButton("修改密码");
 	public JButton button_like_baidu=new JButton("百度√");
 	public JButton button_like_youdao=new JButton("有道√");
@@ -51,9 +53,11 @@ public class UI_Main extends JFrame{
 		JPanel panel_account=new JPanel();
 		panel_account.setBounds(10, 50, 570, 30);
 		content_panel.add(panel_account);
-		panel_account.setLayout(new BorderLayout(20,0));
-		panel_account.add(button_log,BorderLayout.WEST);
-		panel_account.add(button_passwd_change,BorderLayout.EAST);
+		panel_account.setLayout(new GridLayout(1, 4,30,0));
+		panel_account.add(button_log);
+		panel_account.add(button_send_card);
+		panel_account.add(button_receive_card);
+		panel_account.add(button_passwd_change);
 		
 		//复选框面板
 		JPanel panel_choice=new JPanel();

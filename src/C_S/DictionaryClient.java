@@ -14,6 +14,7 @@ import Reptile.Youdao;
 import UI.UI_Main;
 import UI.UI_Passwd_Change;
 import UI.UI_login;
+import Wordcard.*;
 
 public class DictionaryClient extends JFrame{
 	private DataOutputStream toServer;
@@ -59,6 +60,8 @@ public class DictionaryClient extends JFrame{
 				ui_main.button_like_youdao.setEnabled(false);
 				ui_main.button_like_Iciba.setEnabled(false);
 				ui_main.button_passwd_change.setEnabled(false);
+				ui_main.button_send_card.setEnabled(false);
+				ui_main.button_receive_card.setEnabled(false);
 				ui_main.setVisible(true);
 			}
 		});
@@ -85,6 +88,8 @@ public class DictionaryClient extends JFrame{
 						ui_main.button_like_youdao.setEnabled(true);
 						ui_main.button_like_Iciba.setEnabled(true);
 						ui_main.button_passwd_change.setEnabled(true);
+						ui_main.button_send_card.setEnabled(true);
+						ui_main.button_receive_card.setEnabled(true);
 					}
 					else JOptionPane.showMessageDialog(null, "用户名或密码错误", "error", JOptionPane.ERROR_MESSAGE);
 					
@@ -196,6 +201,32 @@ public class DictionaryClient extends JFrame{
 			}
 		});
 
+		//发送单词卡按钮监听
+		ui_main.button_send_card.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Card card=new Card();
+				/*StringBuffer temp=new StringBuffer("");
+				if(ui_main.check_baidu.isSelected()) {
+					temp.append(ui_main.text_name1.toString()+"\n"+ui_main.text_1.toString()+"\n");
+				}
+				if(ui_main.check_youdao.isSelected()){
+					temp.append(ui_main.text_name2.toString()+"\n"+ui_main.text_2.toString()+"\n");
+				}
+				if(ui_main.check_Iciba.isSelected()) {
+					temp.append(ui_main.text_name3.toString()+"\n"+ui_main.text_3.toString()+"\n");
+				}*/
+				String temp=ui_main.text_1.toString();
+				card.image_gengeration(temp, "D://card.jpg");
+			}
+		});
+		
+		//接受单词卡按钮监听
+		ui_main.button_receive_card.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		
 		//查询按钮监听		
 		ui_main.search_button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
