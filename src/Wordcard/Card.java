@@ -12,7 +12,7 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 public class Card {
 	private BufferedImage image;
-	private int height=400,width=300;
+	private int height=1000,width=800;
 	private void create(String location) {
 		try {
 			FileOutputStream s=new FileOutputStream(location);
@@ -30,8 +30,19 @@ public class Card {
 		graph.setColor(Color.white);//设置背景色
 		graph.fillRect(0, 0, width, height);//填充背景
 		graph.setColor(Color.black);//设置前景色
-		graph.setFont(new Font("宋体",Font.PLAIN,20));//设置字体
-		graph.drawString(content, 50,50);
+		graph.setFont(new Font("宋体",Font.PLAIN,15));//设置字体
+		int row=50,jump=15;
+		StringBuffer temp=new StringBuffer();
+		for(int i=0;i<content.length();i++) {
+			if(content.charAt(i)!='\n') {
+				temp.append(content.charAt(i));
+			}
+			else {
+				graph.drawString(temp.toString(),50,row);
+				row+=jump;
+				temp.setLength(0);;
+			}
+		}
 		create(location);
 	}
 }

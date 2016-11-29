@@ -205,18 +205,17 @@ public class DictionaryClient extends JFrame{
 		ui_main.button_send_card.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Card card=new Card();
-				/*StringBuffer temp=new StringBuffer("");
+				StringBuffer temp=new StringBuffer("");
 				if(ui_main.check_baidu.isSelected()) {
-					temp.append(ui_main.text_name1.toString()+"\n"+ui_main.text_1.toString()+"\n");
+					temp.append(ui_main.text_name1.getText()+"\n"+ui_main.text_1.getText()+"\n");
 				}
 				if(ui_main.check_youdao.isSelected()){
-					temp.append(ui_main.text_name2.toString()+"\n"+ui_main.text_2.toString()+"\n");
+					temp.append(ui_main.text_name2.getText()+"\n"+ui_main.text_2.getText()+"\n");
 				}
 				if(ui_main.check_Iciba.isSelected()) {
-					temp.append(ui_main.text_name3.toString()+"\n"+ui_main.text_3.toString()+"\n");
-				}*/
-				String temp=ui_main.text_1.toString();
-				card.image_gengeration(temp, "D://card.jpg");
+					temp.append(ui_main.text_name3.getText()+"\n"+ui_main.text_3.getText()+"\n");
+				}
+				card.image_gengeration(temp.toString(), "D://card.jpg");
 			}
 		});
 		
