@@ -76,6 +76,8 @@ public class UI_Main extends JFrame{
 		content_panel.add(panel_1);
 		panel_1.setLayout(new BorderLayout());
 		panel_1.add(scroll_1,BorderLayout.CENTER);
+		text_name1.setBorder(null);
+		text_name1.setOpaque(false);
 		panel_1.add(text_name1,BorderLayout.NORTH);
 		scroll_1.add(text_1);
 		scroll_1.setViewportView(text_1);
@@ -88,6 +90,8 @@ public class UI_Main extends JFrame{
 		content_panel.add(panel_2);
 		panel_2.setLayout(new BorderLayout());
 		panel_2.add(scroll_2,BorderLayout.CENTER);
+		text_name2.setBorder(null);
+		text_name2.setOpaque(false);
 		panel_2.add(text_name2,BorderLayout.NORTH);
 		scroll_2.add(text_2);
 		scroll_2.setViewportView(text_2);
@@ -100,6 +104,8 @@ public class UI_Main extends JFrame{
 		content_panel.add(panel_3);
 		panel_3.setLayout(new BorderLayout());
 		panel_3.add(scroll_3,BorderLayout.CENTER);
+		text_name3.setBorder(null);
+		text_name3.setOpaque(false);
 		panel_3.add(text_name3,BorderLayout.NORTH);
 		scroll_3.add(text_3);
 		scroll_3.setViewportView(text_3);
