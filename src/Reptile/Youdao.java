@@ -8,7 +8,7 @@ import org.jsoup.nodes.Document;
 
 public class Youdao {
     public static String doTranslate(String keyword) {
-    	String url=new String(" "+keyword);
+    	String url=new String("http://dict.youdao.com/w/eng/"+keyword);
     	String resource = null;
         try {
             // 得到网页的内容
@@ -26,4 +26,5 @@ public class Youdao {
 		}
         return null;
     }
+    
 }

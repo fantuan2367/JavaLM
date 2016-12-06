@@ -30,7 +30,6 @@ public class Card {
 		graph.setColor(Color.white);//设置背景色
 		graph.fillRect(0, 0, width, height);//填充背景
 		graph.setColor(Color.black);//设置前景色
-		graph.setFont(new Font("宋体",Font.PLAIN,15));//设置字体
 		int row=50,jump=15;
 		StringBuffer temp=new StringBuffer();
 		for(int i=0;i<content.length();i++) {
@@ -38,9 +37,41 @@ public class Card {
 				temp.append(content.charAt(i));
 			}
 			else {
-				graph.drawString(temp.toString(),50,row);
-				row+=jump;
-				temp.setLength(0);;
+				String word_to_print=temp.toString();
+				if(word_to_print.compareTo("baidu")==0) {
+					row+=2*jump;
+					temp=new StringBuffer("百度");
+					graph.setFont(new Font("黑体",Font.BOLD,25));
+					graph.drawString(temp.toString(),50,row);
+					row+=2*jump;
+					temp.setLength(0);
+					continue;
+				}
+				else if(word_to_print.compareTo("youdao")==0) {
+					row+=2*jump;
+					temp=new StringBuffer("有道");
+					graph.setFont(new Font("黑体",Font.BOLD,30));
+					graph.drawString(temp.toString(),50,row);
+					row+=2*jump;
+					temp.setLength(0);
+					continue;
+				}
+				else if(word_to_print.compareTo("iciba")==0) {
+					row+=2*jump;
+					temp=new StringBuffer("Iciba");
+					graph.setFont(new Font("黑体",Font.BOLD,30));
+					graph.drawString(temp.toString(),50,row);
+					row+=2*jump;
+					temp.setLength(0);
+					continue;
+				}
+				else{
+					graph.setFont(new Font("宋体",Font.PLAIN,15));
+					graph.drawString(temp.toString(),50,row);
+					row+=jump;
+					temp.setLength(0);
+					continue;
+				}
 			}
 		}
 		create(location);
