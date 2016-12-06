@@ -22,7 +22,7 @@ public class UI_Passwd_Change extends JFrame {
 		setSize(300,150);
 		setLocationRelativeTo(null);
 		setResizable(false);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		JPanel content_panel=new JPanel();
 		content_panel.setBorder(new EmptyBorder(5, 5, 5, 5));//设置周围的空白边界
 		setContentPane(content_panel);

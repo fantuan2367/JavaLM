@@ -1,9 +1,12 @@
 package UI;
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -20,7 +23,7 @@ public class UI_Server extends JFrame{
 	private Vector<String> name_left;
 	private String[] name_right= {"提供商","被赞次数"};
 	private DefaultTableModel model;
-	private JTable table_left=new JTable();
+	public JTable table_left=new JTable();
 	private JTable table_right=new JTable(info_right, name_right);
 	
 	public void left_passwd_Online(String username){
@@ -134,4 +137,5 @@ public class UI_Server extends JFrame{
 		//窗体设置为可见
 		setVisible(true);
 	}
+	
 }

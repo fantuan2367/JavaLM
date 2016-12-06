@@ -16,6 +16,7 @@ public class DictionaryServer extends JFrame{
 	TestJDBC DataBase=new TestJDBC();
 	LikeJDBC LikeBase=new LikeJDBC();
 	UI_Server ui_server;
+	int clientNo;
 	public static void main(String[] args){
 		new DictionaryServer();
 	}
@@ -26,7 +27,7 @@ public class DictionaryServer extends JFrame{
 			ServerSocket serverSocket=new ServerSocket(8000);
 			System.out.println("DictionaryServer started at "+new Date());
 			//记录用户端数目,刷新界面
-			int clientNo=1;
+			clientNo=1;
 			try{
 				Values[] value=DataBase.showAll();
 				ui_server=new UI_Server(value);
@@ -38,6 +39,36 @@ public class DictionaryServer extends JFrame{
 			ui_server.right_times_change(0,LikeBase.getLikeTimes("baidu"));
 			ui_server.right_times_change(1,LikeBase.getLikeTimes("youdao"));
 			ui_server.right_times_change(2,LikeBase.getLikeTimes("bing"));
+			
+			//清空点赞次数
+			ui_server.clear_liketable.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					LikeBase.clear();
+					LikeBase.creatTable();
+					ui_server.right_times_change(0,LikeBase.getLikeTimes("baidu"));
+					ui_server.right_times_change(1,LikeBase.getLikeTimes("youdao"));
+					ui_server.right_times_change(2,LikeBase.getLikeTimes("bing"));
+				}
+			});
+			//删除用户
+			ui_server.button_delete_user.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e){
+					int row=ui_server.table_left.getSelectedRow();
+					int column=ui_server.table_left.getSelectedColumn();
+					if(column==0){
+						String username=(String)ui_server.table_left.getValueAt(row,column);
+						if(DataBase.delete(username))
+							ui_server.left_passwd_Remove(username);
+					}
+					else if(column==1){
+						String username=(String)ui_server.table_left.getValueAt(row,0);
+						if(DataBase.delete(username))
+							ui_server.left_passwd_Remove(username);
+					}	
+					else
+						JOptionPane.showMessageDialog(null,"请选中用户", "error", JOptionPane.ERROR_MESSAGE);
+				}
+			});
 			
 			while(true){
 				//连接用户端
@@ -55,19 +86,6 @@ public class DictionaryServer extends JFrame{
 		catch(IOException ex){
 			System.err.println(ex);
 		}
-		
-		ui_server.clear_liketable.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e) {
-				LikeBase.clear();
-				LikeBase.creatTable();
-			}
-		});
-		
-		ui_server.button_delete_user.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				
-			}
-		});
 	
 	}
 	//定义一个线程来运行用户端
@@ -88,8 +106,17 @@ public class DictionaryServer extends JFrame{
 				while(true){
 					//信息交换
 					int commandType=inputFromClient.readInt();
-					
 					switch(commandType){
+					case 0:{//关闭
+						String username=inputFromClient.readUTF();
+						String password=inputFromClient.readUTF();
+						boolean bool=DataBase.offLine(username,password);
+						if(bool){
+							ui_server.left_passwd_Outline(username);
+							clientNo--;
+						}
+						outputToClient.writeBoolean(bool);
+						}break;
 					case 1:{//登录
 						String username=inputFromClient.readUTF();
 						String password=inputFromClient.readUTF();

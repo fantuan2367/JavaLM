@@ -149,7 +149,6 @@ public class LikeJDBC {
 		    String sql="select * from "+table+" where name=?";
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1,"baidu");
-			System.out.println(pstmt);
 			rs=pstmt.executeQuery();
 			String s="";
 			int temp1=0;

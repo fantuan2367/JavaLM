@@ -1,6 +1,8 @@
 package C_S;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.*;
 import java.net.*;
 import java.sql.Date;
@@ -56,12 +58,15 @@ public class DictionaryClient extends JFrame{
 		ui.tourist.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ui.setVisible(false);
+				ui.name_input.setText("");
+				ui.passwd_input.setText("");
 				ui_main.button_like_baidu.setEnabled(false);
 				ui_main.button_like_youdao.setEnabled(false);
 				ui_main.button_like_Iciba.setEnabled(false);
 				ui_main.button_passwd_change.setEnabled(false);
 				ui_main.button_send_card.setEnabled(false);
 				ui_main.button_receive_card.setEnabled(false);
+				ui_main.button_log.setEnabled(true);
 				ui_main.setVisible(true);
 			}
 		});
@@ -90,6 +95,7 @@ public class DictionaryClient extends JFrame{
 						ui_main.button_passwd_change.setEnabled(true);
 						ui_main.button_send_card.setEnabled(true);
 						ui_main.button_receive_card.setEnabled(true);
+						ui_main.button_log.setEnabled(false);
 					}
 					else JOptionPane.showMessageDialog(null, "用户名或密码错误", "error", JOptionPane.ERROR_MESSAGE);
 					
@@ -135,6 +141,26 @@ public class DictionaryClient extends JFrame{
 			}
 		});
 		
+		//主窗口关闭监听
+		ui_main.addWindowListener(new WindowAdapter(){
+			public void windowClosing(WindowEvent e){
+				try {
+					int commandType=0;
+					MD5 md5=new MD5();
+					String username=ui.name_input.getText();
+					String password=String.valueOf(ui.passwd_input.getPassword());
+					toServer.writeInt(commandType);
+					toServer.writeUTF(username);
+					toServer.writeUTF(md5.encryptMD5(password));
+					boolean judge=fromServer.readBoolean();
+					if(!judge)
+						System.out.println("error in windows close");
+				} catch (IOException e1) {
+					System.out.println("error in windows close");
+				}
+			}
+		});
+		
 		//修改密码按钮监听
 		ui_main.button_passwd_change.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -154,11 +180,12 @@ public class DictionaryClient extends JFrame{
 					else{
 		                if(passwordOne.length()==0)
 		                	JOptionPane.showMessageDialog(null, "密码不能为空", "error", JOptionPane.ERROR_MESSAGE);
-						int commandType=4;
+		                int commandType=4;
+		                MD5 md5=new MD5();
 						String username=ui.name_input.getText();
 						toServer.writeInt(commandType);
 						toServer.writeUTF(username);
-						toServer.writeUTF(passwordOne);
+						toServer.writeUTF(md5.encryptMD5(passwordOne));
 						
 						boolean judge=fromServer.readBoolean();
 						if(judge){
@@ -187,7 +214,16 @@ public class DictionaryClient extends JFrame{
 				ui_passwd_change.passwd_change_twice.setText(null);
 				ui_passwd_change.setVisible(false);
 			}
-		});	
+		});
+		//修改密码窗口异常关闭监听
+		ui_passwd_change.addWindowListener(new WindowAdapter(){
+			public void windowClosing(WindowEvent e){
+				ui_main.setVisible(true);
+				ui_passwd_change.passwd_change_once.setText(null);
+				ui_passwd_change.passwd_change_twice.setText(null);
+				ui_passwd_change.setVisible(false);
+			}
+		});
 		
 		//登录注册按钮监听
 		ui_main.button_log.addActionListener(new ActionListener() {
@@ -237,6 +273,9 @@ public class DictionaryClient extends JFrame{
 							return;
 					}
 				
+				ui_main.searchOnceBaidu=0;
+				ui_main.searchOnceIciba=0;
+				ui_main.searchOnceYoudao=0;
 				ui_main.text_1.setText("");
 				ui_main.text_2.setText("");
 				ui_main.text_3.setText("");
@@ -306,44 +345,53 @@ public class DictionaryClient extends JFrame{
 		//点赞功能
 		ui_main.button_like_baidu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				try{
-					int commandType=5;
-					String s="baidu";
-					
-					toServer.writeInt(commandType);
-					toServer.writeUTF(s);
-				}
-				catch(IOException ex){
-					System.out.println("error in listenerBaidu");
-				}
+				if(ui_main.searchOnceBaidu==0)
+					try{
+						int commandType=5;
+						String s="baidu";
+						ui_main.searchOnceBaidu=1;
+						toServer.writeInt(commandType);
+						toServer.writeUTF(s);
+					}
+					catch(IOException ex){
+						System.out.println("error in listenerBaidu");
+					}
+				else
+					JOptionPane.showMessageDialog(null, "已点赞", "error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		ui_main.button_like_youdao.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				try{
-					int commandType=5;
-					String s="youdao";
-					
-					toServer.writeInt(commandType);
-					toServer.writeUTF(s);
-				}
-				catch(IOException ex){
-					System.out.println("error in listenerYoudao");
-				}
+				if(ui_main.searchOnceYoudao==0)
+					try{
+						int commandType=5;
+						String s="youdao";
+						ui_main.searchOnceYoudao=1;
+						toServer.writeInt(commandType);
+						toServer.writeUTF(s);
+					}
+					catch(IOException ex){
+						System.out.println("error in listenerYoudao");
+					}
+				else
+					JOptionPane.showMessageDialog(null, "已点赞", "error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 		ui_main.button_like_Iciba.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				try{
-					int commandType=5;
-					String s="bing";
-					
-					toServer.writeInt(commandType);
-					toServer.writeUTF(s);
-				}
-				catch(IOException ex){
-					System.out.println("error in listenerbBing");
-				}
+				if(ui_main.searchOnceIciba==0)
+					try{
+						int commandType=5;
+						String s="bing";
+						ui_main.searchOnceIciba=1;
+						toServer.writeInt(commandType);
+						toServer.writeUTF(s);
+					}
+					catch(IOException ex){
+						System.out.println("error in listenerbBing");
+					}
+				else
+					JOptionPane.showMessageDialog(null, "已点赞", "error", JOptionPane.ERROR_MESSAGE);
 			}
 		});
 	}
