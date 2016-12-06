@@ -28,6 +28,9 @@ public class UI_Main extends JFrame{
 	public JButton button_like_baidu=new JButton("百度√");
 	public JButton button_like_youdao=new JButton("有道√");
 	public JButton button_like_Iciba=new JButton("Iciba√");
+	public int searchOnceBaidu=0;
+	public int searchOnceYoudao=0;
+	public int searchOnceIciba=0;
 	
 	public UI_Main(){
 		setTitle("Net Dictionary");

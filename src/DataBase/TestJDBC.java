@@ -133,6 +133,33 @@ public class TestJDBC
 		return flag;
 	}
 	
+	//下线
+	public boolean offLine(String username,String userPassword) {
+		conn = getConnection();
+		boolean flag=false;
+		try {
+			String sql = "select * from "+table+" where username=? and password=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,username);
+			pstmt.setString(2,userPassword);
+			rs=pstmt.executeQuery();
+			if(rs.next()){
+				flag=true;
+				sql="update "+table+" set online=? where username=?";
+				pstmt=conn.prepareStatement(sql);
+				pstmt.setInt(1,0);
+				pstmt.setString(2,username);
+				pstmt.executeUpdate();
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("下线失败");
+			return false;
+		}
+		return flag;
+	}
+	
 	public Values[] showAll() throws SQLException{
 		conn=getConnection();
 		Statement statement=conn.createStatement();
