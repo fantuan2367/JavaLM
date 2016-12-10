@@ -22,7 +22,10 @@ public class Youdao {
         Pattern p=Pattern.compile("(.*)(æ¿¥Ì )(.*)(Õ¯¬Á Õ“Â)(.*)");
         Matcher m=p.matcher(resource);
 		if(m.matches()){
-			return (m.group(3)).replaceAll(" ","\n");
+			return (m.group(3)).replaceAll(" adj","\nadj")
+					.replaceAll(" n","\nn").replaceAll(" adv","\nadv")
+					.replaceAll(" prop","\nprop").replaceAll(" conj","\nconj")
+					.replaceAll(" vi","\nvi").replaceAll(" vt","\nvt");
 		}
         return null;
     }

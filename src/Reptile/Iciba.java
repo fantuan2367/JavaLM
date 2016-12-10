@@ -24,7 +24,11 @@ public class Iciba {
 		Pattern p=Pattern.compile("(.*)(\\.mp3 )(.*)(£»)(.*)");
 		Matcher m=p.matcher(resource);
 		if(m.matches()){
-			return (m.group(3)).replaceAll(" ","\n").replaceAll("£º",":\n");
+			return (m.group(3)).replaceAll("\n","").replaceAll("£»","£»\n")
+					.replaceAll("n. ","n.\n").replaceAll("v.","v.\n")
+					.replaceAll("adj.","adj.\n").replaceAll("prep.","prep.\n")
+					.replaceAll("abbr. ","abbr.\n").replaceAll("conj.","conj.\n")
+					.replaceAll("adv.", "adv.\n");
 		}
 		return null;
 	}
