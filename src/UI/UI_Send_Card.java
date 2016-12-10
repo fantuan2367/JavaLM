@@ -9,19 +9,16 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class UI_Passwd_Root_Change extends JFrame {
-	private JTextField passwd_change_first=new JTextField("新密码：");
-	private JTextField passwd_change_second=new JTextField("重新输入新密码：");
-	public JTextField passwd_change_once=new JTextField();
-	public JTextField passwd_change_twice=new JTextField();
-	public JButton change_yes=new JButton("确认");
-	public JButton change_no=new JButton("取消");
-	public UI_Passwd_Root_Change() {
-		setTitle("Change passed");
+public class UI_Send_Card extends JFrame {
+	private JTextField passwd_change_first=new JTextField("接受者：");
+	public JTextField receiver=new JTextField();
+	public JButton button_yes=new JButton("确认");
+	public JButton button_no=new JButton("取消");
+	public UI_Send_Card() {
+		setTitle("Send Card");
 		setSize(300,150);
 		setLocationRelativeTo(null);
 		setResizable(false);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		JPanel content_panel=new JPanel();
 		content_panel.setBorder(new EmptyBorder(5, 5, 5, 5));//设置周围的空白边界
 		setContentPane(content_panel);
@@ -32,36 +29,31 @@ public class UI_Passwd_Root_Change extends JFrame {
 		panel_hint.setBounds(10,10,50,60);
 		content_panel.add(panel_hint);
 		panel_hint.setLayout(new BorderLayout());
-		//加入第一次输入提示栏
+		//加入接受者输入提示栏
 		passwd_change_first.setBorder(null);
 		passwd_change_first.setOpaque(false);
 		passwd_change_first.setEditable(false);
-		panel_hint.add(passwd_change_first,BorderLayout.NORTH);
-		//加入第二次输入提示栏
-		passwd_change_second.setBorder(null);
-		passwd_change_second.setOpaque(false);
-		passwd_change_second.setEditable(false);
-		panel_hint.add(passwd_change_second,BorderLayout.SOUTH);
+		panel_hint.add(passwd_change_first,BorderLayout.CENTER);
 		
 		//设置输入面板
 		JPanel panel_input=new JPanel();
-		panel_input.setBounds(80, 10,200,60);
+		panel_input.setBounds(80,30,200,20);
 		content_panel.add(panel_input);
 		panel_input.setLayout(new BorderLayout());
 		//加入用户名输入栏
-		panel_input.add(passwd_change_once,BorderLayout.NORTH);
-		//加入密码输入栏
-		panel_input.add(passwd_change_twice,BorderLayout.SOUTH);
+		panel_input.add(receiver,BorderLayout.CENTER);
 		
 		//设置按钮面板
 		JPanel panel_button=new JPanel();
 		panel_button.setBounds(30,80,250,50);
 		content_panel.add(panel_button);
 		//加入按钮
-		panel_button.add(change_yes,BorderLayout.WEST);
-		panel_button.add(change_no,BorderLayout.EAST);
+		button_yes.setFocusPainted(false);
+		panel_button.add(button_yes,BorderLayout.WEST);
+		button_no.setFocusPainted(false);
+		panel_button.add(button_no,BorderLayout.EAST);
 		
 		//窗体设置为可见
-		setVisible(false);
+		setVisible(true);
 	}
 }
