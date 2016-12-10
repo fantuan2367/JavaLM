@@ -24,13 +24,15 @@ public class Card {
 			e.printStackTrace();
 		}
 	}
-	public void image_gengeration(String content,String location) {
+	public void image_gengeration(String from,String content,String location) {
 		image=new BufferedImage(width,height,BufferedImage.TYPE_INT_RGB);
 		Graphics graph=image.getGraphics();
 		graph.setColor(Color.white);//设置背景色
 		graph.fillRect(0, 0, width, height);//填充背景
 		graph.setColor(Color.black);//设置前景色
-		int row=50,jump=15;
+		int row=70,jump=15;
+		graph.setFont(new Font("幼圆",Font.BOLD,20));
+		graph.drawString("                     From:  "+from,100,50);
 		StringBuffer temp=new StringBuffer();
 		for(int i=0;i<content.length();i++) {
 			if(content.charAt(i)!='\n') {
@@ -41,7 +43,7 @@ public class Card {
 				if(word_to_print.compareTo("baidu")==0) {
 					row+=2*jump;
 					temp=new StringBuffer("百度");
-					graph.setFont(new Font("黑体",Font.BOLD,25));
+					graph.setFont(new Font("黑体",Font.BOLD,30));
 					graph.drawString(temp.toString(),50,row);
 					row+=2*jump;
 					temp.setLength(0);
