@@ -11,12 +11,15 @@ import DataBase.LikeJDBC;
 import DataBase.TestJDBC;
 import DataBase.Values;
 import UI.UI_Server;
+import Wordcard.CardValue;
 
 public class DictionaryServer extends JFrame{
 	TestJDBC DataBase=new TestJDBC();
 	LikeJDBC LikeBase=new LikeJDBC();
+	CardValue[] card;
 	UI_Server ui_server;
 	int clientNo;
+	int cardNo=0;
 	public static void main(String[] args){
 		new DictionaryServer();
 	}
@@ -121,9 +124,9 @@ public class DictionaryServer extends JFrame{
 						String username=inputFromClient.readUTF();
 						String password=inputFromClient.readUTF();
 						boolean bool=DataBase.check(username,password);
-						if(bool)
-							ui_server.left_passwd_Online(username);
 						outputToClient.writeBoolean(bool);
+						if(bool)//更新客户端列表
+							ui_server.left_passwd_Online(username);
 					}break;
 					case 2:{//注册
 						String username=inputFromClient.readUTF();
@@ -165,6 +168,35 @@ public class DictionaryServer extends JFrame{
 						outputToClient.writeInt(order[0]);
 						outputToClient.writeInt(order[1]);
 						outputToClient.writeInt(order[2]);
+					}break;
+					case 7:{//接受发送的单词卡
+						//判断用户名是否符合规范
+						String clientName=inputFromClient.readUTF();
+						String[] clientNames=clientName.split(" ");
+						for(int i=0;i<clientNames.length;i++)
+							clientNames[i]=clientNames[i].trim();
+						boolean judgement=true;
+						for(int i=0;i<clientNames.length;i++)
+							if(!DataBase.searchIn(clientNames[i])){
+								judgement=false;
+								break;
+							}
+						outputToClient.writeBoolean(judgement);
+						String temp=inputFromClient.readUTF();
+						String username=inputFromClient.readUTF();
+						for(int i=0;i<clientNames.length;i++){
+							card[cardNo]=new CardValue(clientNames[i],username,temp);
+							cardNo++;
+						}
+					}break;
+					case 8:{//发送接受的单词卡
+						String username=inputFromClient.readUTF();
+						for(int i=0;i<cardNo;i++)
+							if((card[i].ReadOrNot())&&(card[i].getToClient()==username)){
+								outputToClient.writeBoolean(true);
+								outputToClient.writeUTF(card[i].getContent());
+							}
+						outputToClient.writeBoolean(false);
 					}break;
 					default:System.out.println("error in ServerLike");break;
 					}
