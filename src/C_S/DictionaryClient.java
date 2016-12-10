@@ -98,7 +98,6 @@ public class DictionaryClient extends JFrame{
 						ui_main.button_log.setEnabled(false);
 					}
 					else JOptionPane.showMessageDialog(null, "用户名或密码错误", "error", JOptionPane.ERROR_MESSAGE);
-					
 				}
 				catch(IOException ex){
 					System.out.println("error in listener1");
@@ -240,24 +239,58 @@ public class DictionaryClient extends JFrame{
 		//发送单词卡按钮监听
 		ui_main.button_send_card.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Card card=new Card();
 				StringBuffer temp=new StringBuffer("");
-				if(ui_main.check_baidu.isSelected()) {
-					temp.append(ui_main.text_name1.getText()+"\n"+ui_main.text_1.getText()+"\n");
+				if(ui_main.check_baidu.isSelected()){
+					if(ui_main.text_name1.getText()=="baidu")
+						temp.append(ui_main.text_name1.getText()+"\n"+ui_main.text_1.getText()+"\n");
+					else if(ui_main.text_name2.getText()=="baidu")
+						temp.append(ui_main.text_name2.getText()+"\n"+ui_main.text_2.getText()+"\n");
+					else if(ui_main.text_name3.getText()=="baidu")
+						temp.append(ui_main.text_name3.getText()+"\n"+ui_main.text_3.getText()+"\n");
 				}
 				if(ui_main.check_youdao.isSelected()){
-					temp.append(ui_main.text_name2.getText()+"\n"+ui_main.text_2.getText()+"\n");
+					if(ui_main.text_name1.getText()=="youdao")
+						temp.append(ui_main.text_name1.getText()+"\n"+ui_main.text_1.getText()+"\n");
+					else if(ui_main.text_name2.getText()=="youdao")
+						temp.append(ui_main.text_name2.getText()+"\n"+ui_main.text_2.getText()+"\n");
+					else if(ui_main.text_name3.getText()=="youdao")
+						temp.append(ui_main.text_name3.getText()+"\n"+ui_main.text_3.getText()+"\n");
 				}
 				if(ui_main.check_Iciba.isSelected()) {
-					temp.append(ui_main.text_name3.getText()+"\n"+ui_main.text_3.getText()+"\n");
+					if(ui_main.text_name1.getText()=="iciba")
+						temp.append(ui_main.text_name1.getText()+"\n"+ui_main.text_1.getText()+"\n");
+					else if(ui_main.text_name2.getText()=="iciba")
+						temp.append(ui_main.text_name2.getText()+"\n"+ui_main.text_2.getText()+"\n");
+					else if(ui_main.text_name3.getText()=="iciba")
+						temp.append(ui_main.text_name3.getText()+"\n"+ui_main.text_3.getText()+"\n");
 				}
-				card.image_gengeration(temp.toString(), "D://card.jpg");
+				String tempp=temp.toString();
+				String clientName="";
+				try {
+					toServer.writeInt(7);
+					toServer.writeUTF(clientName);
+					if(fromServer.readBoolean())
+						toServer.writeUTF(tempp);
+					else
+						JOptionPane.showMessageDialog(null, "用户不存在", "error", JOptionPane.ERROR_MESSAGE);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				//card.image_gengeration(temp.toString(), "D://card.jpg");
 			}
 		});
 		
 		//接受单词卡按钮监听
 		ui_main.button_receive_card.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				try {
+					toServer.writeInt(8);
+					String username=ui.name_input.getText();
+					toServer.writeUTF(username);
+					
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 				
 			}
 		});

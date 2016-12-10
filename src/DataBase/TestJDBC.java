@@ -88,6 +88,22 @@ public class TestJDBC
 		return rs;
 	}
 	
+	//搜索用户存在
+	public boolean searchIn(String username){
+		conn=getConnection();
+		try {
+		    String sql="select * from "+table+" where username=?";
+			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1,username);
+			rs=pstmt.executeQuery();
+			return true;
+		}
+		catch (SQLException e){
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	//更改密码
 	public boolean change(String username,String password){
 		conn=getConnection();
