@@ -15,6 +15,8 @@ import Reptile.Iciba;
 import Reptile.Youdao;
 import UI.UI_Main;
 import UI.UI_Passwd_Change;
+import UI.UI_Receive_Card;
+import UI.UI_Send_Card;
 import UI.UI_login;
 import Wordcard.*;
 
@@ -70,7 +72,6 @@ public class DictionaryClient extends JFrame{
 				ui_main.setVisible(true);
 			}
 		});
-		
 		//登录按钮监听
 		ui.sign_in.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -223,7 +224,6 @@ public class DictionaryClient extends JFrame{
 				ui_passwd_change.setVisible(false);
 			}
 		});
-		
 		//登录注册按钮监听
 		ui_main.button_log.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -235,51 +235,90 @@ public class DictionaryClient extends JFrame{
 				ui_main.text_3.setText("");
 			}
 		});
-
 		//发送单词卡按钮监听
 		ui_main.button_send_card.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//获取表格中内容
 				StringBuffer temp=new StringBuffer("");
 				if(ui_main.check_baidu.isSelected()){
-					if(ui_main.text_name1.getText()=="baidu")
+					if(ui_main.text_name1.getText().equals("baidu"))
 						temp.append(ui_main.text_name1.getText()+"\n"+ui_main.text_1.getText()+"\n");
-					else if(ui_main.text_name2.getText()=="baidu")
+					else if(ui_main.text_name2.getText().equals("baidu"))
 						temp.append(ui_main.text_name2.getText()+"\n"+ui_main.text_2.getText()+"\n");
-					else if(ui_main.text_name3.getText()=="baidu")
+					else if(ui_main.text_name3.getText().equals("baidu"))
 						temp.append(ui_main.text_name3.getText()+"\n"+ui_main.text_3.getText()+"\n");
 				}
 				if(ui_main.check_youdao.isSelected()){
-					if(ui_main.text_name1.getText()=="youdao")
+					if(ui_main.text_name1.getText().equals("youdao"))
 						temp.append(ui_main.text_name1.getText()+"\n"+ui_main.text_1.getText()+"\n");
-					else if(ui_main.text_name2.getText()=="youdao")
+					else if(ui_main.text_name2.getText().equals("youdao"))
 						temp.append(ui_main.text_name2.getText()+"\n"+ui_main.text_2.getText()+"\n");
-					else if(ui_main.text_name3.getText()=="youdao")
+					else if(ui_main.text_name3.getText().equals("youdao"))
 						temp.append(ui_main.text_name3.getText()+"\n"+ui_main.text_3.getText()+"\n");
 				}
 				if(ui_main.check_Iciba.isSelected()) {
-					if(ui_main.text_name1.getText()=="iciba")
+					if(ui_main.text_name1.getText().equals("iciba"))
 						temp.append(ui_main.text_name1.getText()+"\n"+ui_main.text_1.getText()+"\n");
-					else if(ui_main.text_name2.getText()=="iciba")
+					else if(ui_main.text_name2.getText().equals("iciba"))
 						temp.append(ui_main.text_name2.getText()+"\n"+ui_main.text_2.getText()+"\n");
-					else if(ui_main.text_name3.getText()=="iciba")
+					else if(ui_main.text_name3.getText().equals("iciba"))
 						temp.append(ui_main.text_name3.getText()+"\n"+ui_main.text_3.getText()+"\n");
 				}
 				String tempp=temp.toString();
-				String clientName="";
-				try {
-					toServer.writeInt(7);
-					toServer.writeUTF(clientName);
-					if(fromServer.readBoolean())
-						toServer.writeUTF(tempp);
-					else
-						JOptionPane.showMessageDialog(null, "用户不存在", "error", JOptionPane.ERROR_MESSAGE);
-				} catch (IOException e1) {
-					e1.printStackTrace();
+				if(tempp.length()==0){
+					JOptionPane.showMessageDialog(null, "没有单词要分享", "error", JOptionPane.ERROR_MESSAGE);
 				}
-				//card.image_gengeration(temp.toString(), "D://card.jpg");
+				else{
+					UI_Send_Card ui_send=new UI_Send_Card();
+					ui_send.setVisible(true);
+					ui_main.setVisible(false);
+					//确认按钮
+					ui_send.button_yes.addActionListener(new ActionListener(){
+						public void actionPerformed(ActionEvent e){
+							String toClient=ui_send.receiver.getText();
+							try {
+								toServer.writeInt(7);
+								toServer.writeUTF(toClient);
+								if(fromServer.readBoolean()){//判断是否存在这样的用户
+									String fromClient=ui.name_input.getText();
+									toServer.writeUTF(fromClient);
+									toServer.writeUTF(tempp);
+									if(fromServer.readBoolean()){
+										JOptionPane.showMessageDialog(null, "分享单词卡成功", "Success", JOptionPane.INFORMATION_MESSAGE);
+										ui_send.setVisible(false);
+										ui_main.setVisible(true);
+									}
+								}
+								else{
+									JOptionPane.showMessageDialog(null, "用户不存在", "Error", JOptionPane.ERROR_MESSAGE);
+									ui_send.setVisible(false);
+									ui_main.setVisible(true);
+									ui_send.receiver.setText("");
+								}
+							} catch (IOException e1) {
+								e1.printStackTrace();
+							}
+						}
+					});
+					//发送单词卡取消
+					ui_send.button_no.addActionListener(new ActionListener(){
+						public void actionPerformed(ActionEvent e){
+							ui_send.setVisible(false);
+							ui_main.setVisible(true);
+							ui_send.receiver.setText("");
+						}	
+					});
+					//发送单词卡窗口关闭
+					ui_send.addWindowListener(new WindowAdapter(){
+						public void windowClosing(WindowEvent e){
+							ui_send.setVisible(false);
+							ui_main.setVisible(true);
+							ui_send.receiver.setText("");
+						}
+					});
+				}
 			}
 		});
-		
 		//接受单词卡按钮监听
 		ui_main.button_receive_card.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -287,14 +326,61 @@ public class DictionaryClient extends JFrame{
 					toServer.writeInt(8);
 					String username=ui.name_input.getText();
 					toServer.writeUTF(username);
-					
+					int count=0;
+					count=fromServer.readInt();
+					if(count==0)
+						JOptionPane.showMessageDialog(null, "没有要接受的单词卡", "error", JOptionPane.ERROR_MESSAGE);
+					else if(count>0){
+						CardValue[] card=new CardValue[count];
+						int i=0;
+						while(true){
+							String fromclient=fromServer.readUTF();
+							String content=fromServer.readUTF();
+							System.out.println(fromclient+","+content);
+							card[i]=new CardValue(username,fromclient,content);
+							i++;
+							if(i>=count)
+								break;
+						}
+						UI_Receive_Card ui_receive=new UI_Receive_Card();
+						ui_receive.setVisible(true);
+						ui_main.setVisible(false);
+						//接受单词卡确认按钮
+						ui_receive.button_yes.addActionListener(new ActionListener(){
+							public void actionPerformed(ActionEvent e){
+								String location=ui_receive.receiver.getText();
+								Card cardImage=new Card();
+								int i=0;
+								for(;i<card.length;i++){
+									cardImage.image_gengeration(card[i].getFromClient(),card[i].getContent(),location);
+									i++;
+								}
+							}
+						});
+						//接受单词卡取消窗口
+						ui_receive.button_no.addActionListener(new ActionListener(){
+							public void actionPerformed(ActionEvent e){
+								ui_main.setVisible(true);
+								ui_receive.setVisible(false);
+								ui_receive.receiver.setText("");
+							}
+						});
+						//接受单词卡窗口关闭
+						ui_receive.addWindowListener(new WindowAdapter(){
+							public void windowClosing(WindowEvent e){
+								ui_main.setVisible(true);
+								ui_receive.setVisible(false);
+								ui_receive.receiver.setText("");
+							}
+						});
+						
+					}
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
 				
 			}
 		});
-		
 		//查询按钮监听		
 		ui_main.search_button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -374,7 +460,6 @@ public class DictionaryClient extends JFrame{
 				}
 			}
 		});
-
 		//点赞功能
 		ui_main.button_like_baidu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {

@@ -16,7 +16,7 @@ import Wordcard.CardValue;
 public class DictionaryServer extends JFrame{
 	TestJDBC DataBase=new TestJDBC();
 	LikeJDBC LikeBase=new LikeJDBC();
-	CardValue[] card;
+	CardValue[] card=new CardValue[500];
 	UI_Server ui_server;
 	int clientNo;
 	int cardNo=0;
@@ -182,21 +182,35 @@ public class DictionaryServer extends JFrame{
 								break;
 							}
 						outputToClient.writeBoolean(judgement);
-						String temp=inputFromClient.readUTF();
-						String username=inputFromClient.readUTF();
-						for(int i=0;i<clientNames.length;i++){
-							card[cardNo]=new CardValue(clientNames[i],username,temp);
-							cardNo++;
+						if(judgement){
+							String username=inputFromClient.readUTF();
+							String temp=inputFromClient.readUTF();
+							for(int i=0;i<clientNames.length;i++){
+								card[cardNo]=new CardValue(clientNames[i],username,temp);
+								cardNo++;
+								if(cardNo>=500)
+									cardNo=0;
+							}
+							outputToClient.writeBoolean(true);
 						}
 					}break;
 					case 8:{//发送接受的单词卡
 						String username=inputFromClient.readUTF();
-						for(int i=0;i<cardNo;i++)
-							if((card[i].ReadOrNot())&&(card[i].getToClient()==username)){
-								outputToClient.writeBoolean(true);
-								outputToClient.writeUTF(card[i].getContent());
+						int count=0;
+						for(int i=0;i<cardNo;i++){
+							if((card[i].ReadOrNot())&&(card[i].getToClient().equals(username)))
+								count++;
+						}
+						outputToClient.writeInt(count);
+						if(count>0){
+							for(int i=0;i<cardNo;i++){
+								if((card[i].ReadOrNot())&&(card[i].getToClient().equals(username))){
+									outputToClient.writeUTF(card[i].getFromClient());
+									outputToClient.writeUTF(card[i].getContent());
+									card[i].Read();
+								}
 							}
-						outputToClient.writeBoolean(false);
+						}
 					}break;
 					default:System.out.println("error in ServerLike");break;
 					}

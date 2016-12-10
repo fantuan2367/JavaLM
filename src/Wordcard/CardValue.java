@@ -6,6 +6,10 @@ public class CardValue{
 	private String fromClient;
 	private int readOrNot;
 	
+	public CardValue(){
+		
+	}
+	
 	public CardValue(String toclient,String fromclient,String content){
 		this.toClient=toclient;
 		this.fromClient=fromclient;

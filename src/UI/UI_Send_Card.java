@@ -19,6 +19,7 @@ public class UI_Send_Card extends JFrame {
 		setSize(300,150);
 		setLocationRelativeTo(null);
 		setResizable(false);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		JPanel content_panel=new JPanel();
 		content_panel.setBorder(new EmptyBorder(5, 5, 5, 5));//设置周围的空白边界
 		setContentPane(content_panel);
@@ -55,5 +56,8 @@ public class UI_Send_Card extends JFrame {
 		
 		//窗体设置为可见
 		setVisible(true);
+	}
+	public static void main(String args[]){
+		UI_Send_Card a=new UI_Send_Card();
 	}
 }

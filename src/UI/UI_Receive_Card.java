@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class UI_Receive_Card extends JFrame {
+public class UI_Receive_Card extends JFrame{
 	private JTextField passwd_change_first=new JTextField("保存路径：");
 	public JTextField receiver=new JTextField();
 	public JButton button_yes=new JButton("确认");
@@ -22,6 +22,7 @@ public class UI_Receive_Card extends JFrame {
 		setSize(300,150);
 		setLocationRelativeTo(null);
 		setResizable(false);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		JPanel content_panel=new JPanel();
 		content_panel.setBorder(new EmptyBorder(5, 5, 5, 5));//设置周围的空白边界
 		setContentPane(content_panel);
@@ -70,7 +71,15 @@ public class UI_Receive_Card extends JFrame {
 				
 			}
 		});
-		
+		button_view.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser jfc=new JFileChooser();
+				jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				jfc.showOpenDialog(null);
+				receiver.setText(jfc.getSelectedFile().toString());
+			}
+		});
+
 		//窗体设置为可见
 		setVisible(true);
 	}
