@@ -5,7 +5,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.*;
 import java.net.*;
-import java.sql.Date;
 
 import javax.swing.*;
 
@@ -18,7 +17,8 @@ import UI.UI_Passwd_Change;
 import UI.UI_Receive_Card;
 import UI.UI_Send_Card;
 import UI.UI_login;
-import Wordcard.*;
+import Wordcard.Card;
+import Wordcard.CardValue;
 
 public class DictionaryClient extends JFrame{
 	private DataOutputStream toServer;
@@ -80,12 +80,20 @@ public class DictionaryClient extends JFrame{
 					MD5 md5=new MD5();
 					String username=ui.name_input.getText();
 					String password=String.valueOf(ui.passwd_input.getPassword());
-					if(password.length()==0)
+					if(password.length()==0){
 						JOptionPane.showMessageDialog(null,"密码不能为空", "error", JOptionPane.ERROR_MESSAGE);
+						return;
+					}
 					toServer.writeInt(commandType);
 					toServer.writeUTF(username);
+					boolean bool=fromServer.readBoolean();
+					if(!bool){
+						JOptionPane.showMessageDialog(null,"用户已在线", "error", JOptionPane.ERROR_MESSAGE);
+						ui.name_input.setText("");
+						ui.passwd_input.setText("");
+						return;
+					}
 					toServer.writeUTF(md5.encryptMD5(password));
-					
 					boolean judge=fromServer.readBoolean();
 					if(judge){
 						ui.setVisible(false);
@@ -277,22 +285,45 @@ public class DictionaryClient extends JFrame{
 						public void actionPerformed(ActionEvent e){
 							String toClient=ui_send.receiver.getText();
 							try {
+								if(toClient.compareTo("")==0){
+									JOptionPane.showMessageDialog(null,"接受者不能为空", "Success", JOptionPane.INFORMATION_MESSAGE);
+									ui_send.receiver.setText("");
+									return;
+								}
 								toServer.writeInt(7);
 								toServer.writeUTF(toClient);
-								if(fromServer.readBoolean()){//判断是否存在这样的用户
+								boolean bool=fromServer.readBoolean();
+								boolean toyouself=true;
+								String[] s=toClient.split(",");
+								for(int i=0;i<s.length;i++)
+									if(s[i].compareTo(ui.name_input.getText())==0){
+										toyouself=false;
+										break;
+									}
+								if(!toyouself){
+									JOptionPane.showMessageDialog(null,"请不要发送单词卡给自己", "Success", JOptionPane.INFORMATION_MESSAGE);
+									ui_send.receiver.setText("");
+									toServer.writeBoolean(false);
+									return;
+								}
+								else toServer.writeBoolean(true);
+								if(bool){//判断是否存在这样的用户
 									String fromClient=ui.name_input.getText();
 									toServer.writeUTF(fromClient);
 									toServer.writeUTF(tempp);
-									if(fromServer.readBoolean()){
+									if(!fromServer.readBoolean()){
+										String errorname=fromServer.readUTF();
+										JOptionPane.showMessageDialog(null,"您已向"+errorname+"分享过该单词", "error", JOptionPane.INFORMATION_MESSAGE);
+									}
+									else{
 										JOptionPane.showMessageDialog(null, "分享单词卡成功", "Success", JOptionPane.INFORMATION_MESSAGE);
 										ui_send.setVisible(false);
+										ui_send.receiver.setText("");
 										ui_main.setVisible(true);
 									}
 								}
 								else{
-									JOptionPane.showMessageDialog(null, "用户不存在", "Error", JOptionPane.ERROR_MESSAGE);
-									ui_send.setVisible(false);
-									ui_main.setVisible(true);
+									JOptionPane.showMessageDialog(null, "用户不存在,用户之前请用逗号分隔", "Error", JOptionPane.ERROR_MESSAGE);
 									ui_send.receiver.setText("");
 								}
 							} catch (IOException e1) {
@@ -328,15 +359,15 @@ public class DictionaryClient extends JFrame{
 					toServer.writeUTF(username);
 					int count=0;
 					count=fromServer.readInt();
-					if(count==0)
+					if(count==0){
 						JOptionPane.showMessageDialog(null, "没有要接受的单词卡", "error", JOptionPane.ERROR_MESSAGE);
+					}
 					else if(count>0){
 						CardValue[] card=new CardValue[count];
 						int i=0;
 						while(true){
 							String fromclient=fromServer.readUTF();
 							String content=fromServer.readUTF();
-							System.out.println(fromclient+","+content);
 							card[i]=new CardValue(username,fromclient,content);
 							i++;
 							if(i>=count)
@@ -349,11 +380,31 @@ public class DictionaryClient extends JFrame{
 						ui_receive.button_yes.addActionListener(new ActionListener(){
 							public void actionPerformed(ActionEvent e){
 								String location=ui_receive.receiver.getText();
-								Card cardImage=new Card();
-								int i=0;
-								for(;i<card.length;i++){
-									cardImage.image_gengeration(card[i].getFromClient(),card[i].getContent(),location);
-									i++;
+								File file=new File(location);
+								if(!file.exists()){
+									JOptionPane.showMessageDialog(null,"路径不存在", "error", JOptionPane.ERROR_MESSAGE);
+									return;
+								}
+								else{
+									Card cardImage=new Card();
+									int i=0;
+									for(;i<card.length;i++){
+										cardImage.image_gengeration(card[i].getFromClient(),card[i].getContent(),
+												location+"//"+"from"+card[i].getFromClient()+"to"+card[i].getToClient()+(i+1)+".jpg");
+										i++;
+									}
+									if(i>=card.length){
+										JOptionPane.showMessageDialog(null,"单词卡接受成功", "error", JOptionPane.ERROR_MESSAGE);
+										ui_receive.receiver.setText("");
+										ui_receive.setVisible(false);
+										ui_main.setVisible(true);
+									}
+									else{
+										JOptionPane.showMessageDialog(null,"单词卡接受失败", "error", JOptionPane.ERROR_MESSAGE);
+										ui_receive.receiver.setText("");
+										ui_receive.setVisible(false);
+										ui_main.setVisible(true);
+									}
 								}
 							}
 						});

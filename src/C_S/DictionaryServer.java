@@ -122,8 +122,13 @@ public class DictionaryServer extends JFrame{
 						}break;
 					case 1:{//登录
 						String username=inputFromClient.readUTF();
+						boolean bool=DataBase.checkOnline(username);
+						outputToClient.writeBoolean(bool);
+						System.out.println(bool);
+						if(!bool)
+							continue;
 						String password=inputFromClient.readUTF();
-						boolean bool=DataBase.check(username,password);
+						bool=DataBase.check(username,password);
 						outputToClient.writeBoolean(bool);
 						if(bool)//更新客户端列表
 							ui_server.left_passwd_Online(username);
@@ -172,7 +177,7 @@ public class DictionaryServer extends JFrame{
 					case 7:{//接受发送的单词卡
 						//判断用户名是否符合规范
 						String clientName=inputFromClient.readUTF();
-						String[] clientNames=clientName.split(" ");
+						String[] clientNames=clientName.split(",");
 						for(int i=0;i<clientNames.length;i++)
 							clientNames[i]=clientNames[i].trim();
 						boolean judgement=true;
@@ -182,10 +187,23 @@ public class DictionaryServer extends JFrame{
 								break;
 							}
 						outputToClient.writeBoolean(judgement);
-						if(judgement){
+						boolean bool=inputFromClient.readBoolean();
+						if((judgement)&&(bool)){
 							String username=inputFromClient.readUTF();
 							String temp=inputFromClient.readUTF();
 							for(int i=0;i<clientNames.length;i++){
+								int j=0;
+								for(j=0;j<cardNo;j++)
+									if((card[j].getToClient().compareTo(clientNames[i])==0)
+											&&(card[j].getFromClient().compareTo(username)==0)
+											&&(card[j].getContent().compareTo(temp)==0)
+											&&(card[j].ReadOrNot())){
+										outputToClient.writeBoolean(false);
+										outputToClient.writeUTF(clientNames[i]);
+										break;
+									}
+								if(j<cardNo)
+									break;
 								card[cardNo]=new CardValue(clientNames[i],username,temp);
 								cardNo++;
 								if(cardNo>=500)

@@ -96,12 +96,14 @@ public class TestJDBC
 			pstmt=conn.prepareStatement(sql);
 			pstmt.setString(1,username);
 			rs=pstmt.executeQuery();
-			return true;
+			while(rs.next())
+				return true;
 		}
 		catch (SQLException e){
 			e.printStackTrace();
 			return false;
 		}
+		return false;
 	}
 	
 	//更改密码
@@ -148,6 +150,30 @@ public class TestJDBC
 		}
 		return flag;
 	}
+	
+	//检验用户在线
+	public boolean checkOnline(String username){
+		conn=getConnection();
+		boolean flag=true;
+		try{
+			String sql = "select * from "+table+" where username= ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,username);
+			rs=pstmt.executeQuery();
+			while(rs.next()){
+				int temp=rs.getInt(3);
+				if(temp==1)
+					flag=false;
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("检查在线失败");
+			return false;
+		}
+		return flag;
+	}
+	
 	
 	//下线
 	public boolean offLine(String username,String userPassword) {

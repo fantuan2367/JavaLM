@@ -76,7 +76,7 @@ public class Card {
 				}
 			}
 		}
-		create(location+"1.jpg");
+		create(location);
 	}
 }
 

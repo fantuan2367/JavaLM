@@ -23,8 +23,8 @@ public class CardValue{
 	
 	public boolean ReadOrNot(){
 		if(this.readOrNot==0)
-			return true;
-		else return false;
+			return true;//没有被读
+		else return false;//有被读
 	}
 	public String getToClient(){
 		return this.toClient;
