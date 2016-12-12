@@ -139,7 +139,7 @@ public class DictionaryClient extends JFrame{
 					
 					boolean judge=fromServer.readBoolean();
 					if(judge)
-						JOptionPane.showMessageDialog(null, "注册成功", "ok", JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, "注册成功", "success", JOptionPane.INFORMATION_MESSAGE);
 					else
 						JOptionPane.showMessageDialog(null, "用户已存在", "error", JOptionPane.ERROR_MESSAGE);
 				}
@@ -197,7 +197,7 @@ public class DictionaryClient extends JFrame{
 						
 						boolean judge=fromServer.readBoolean();
 						if(judge){
-							JOptionPane.showMessageDialog(null, "修改密码成功", "ok", JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(null, "修改密码成功", "success", JOptionPane.INFORMATION_MESSAGE);
 							ui_main.setVisible(true);
 							ui_passwd_change.passwd_change_once.setText(null);
 							ui_passwd_change.passwd_change_twice.setText(null);
@@ -273,7 +273,9 @@ public class DictionaryClient extends JFrame{
 						temp.append(ui_main.text_name3.getText()+"\n"+ui_main.text_3.getText()+"\n");
 				}
 				String tempp=temp.toString();
-				if(tempp.length()==0){
+				if((ui_main.text_1.getText().length()==0)&&
+						(ui_main.text_2.getText().length()==0)&&
+						(ui_main.text_3.getText().length()==0)){
 					JOptionPane.showMessageDialog(null, "没有单词要分享", "error", JOptionPane.ERROR_MESSAGE);
 				}
 				else{
@@ -286,7 +288,7 @@ public class DictionaryClient extends JFrame{
 							String toClient=ui_send.receiver.getText();
 							try {
 								if(toClient.compareTo("")==0){
-									JOptionPane.showMessageDialog(null,"接受者不能为空", "Success", JOptionPane.INFORMATION_MESSAGE);
+									JOptionPane.showMessageDialog(null,"接受者不能为空", "error", JOptionPane.ERROR_MESSAGE);
 									ui_send.receiver.setText("");
 									return;
 								}
@@ -301,7 +303,7 @@ public class DictionaryClient extends JFrame{
 										break;
 									}
 								if(!toyouself){
-									JOptionPane.showMessageDialog(null,"请不要发送单词卡给自己", "Success", JOptionPane.INFORMATION_MESSAGE);
+									JOptionPane.showMessageDialog(null,"请不要发送单词卡给自己", "error", JOptionPane.ERROR_MESSAGE);
 									ui_send.receiver.setText("");
 									toServer.writeBoolean(false);
 									return;
@@ -313,7 +315,7 @@ public class DictionaryClient extends JFrame{
 									toServer.writeUTF(tempp);
 									if(!fromServer.readBoolean()){
 										String errorname=fromServer.readUTF();
-										JOptionPane.showMessageDialog(null,"您已向"+errorname+"分享过该单词", "error", JOptionPane.INFORMATION_MESSAGE);
+										JOptionPane.showMessageDialog(null,"您已向"+errorname+"分享过该单词", "error", JOptionPane.ERROR_MESSAGE);
 									}
 									else{
 										JOptionPane.showMessageDialog(null, "分享单词卡成功", "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -323,7 +325,7 @@ public class DictionaryClient extends JFrame{
 									}
 								}
 								else{
-									JOptionPane.showMessageDialog(null, "用户不存在,用户之前请用逗号分隔", "Error", JOptionPane.ERROR_MESSAGE);
+									JOptionPane.showMessageDialog(null, "用户不存在,用户之前请用逗号分隔", "error", JOptionPane.ERROR_MESSAGE);
 									ui_send.receiver.setText("");
 								}
 							} catch (IOException e1) {
@@ -390,11 +392,11 @@ public class DictionaryClient extends JFrame{
 									int i=0;
 									for(;i<card.length;i++){
 										cardImage.image_gengeration(card[i].getFromClient(),card[i].getContent(),
-												location+"//"+"from"+card[i].getFromClient()+"to"+card[i].getToClient()+(i+1)+".jpg");
+												location+"//"+"from_"+card[i].getFromClient()+"_to_"+card[i].getToClient()+"_"+(i+1)+".jpg");
 										i++;
 									}
 									if(i>=card.length){
-										JOptionPane.showMessageDialog(null,"单词卡接受成功", "error", JOptionPane.ERROR_MESSAGE);
+										JOptionPane.showMessageDialog(null,"单词卡接受成功", "success", JOptionPane.INFORMATION_MESSAGE);
 										ui_receive.receiver.setText("");
 										ui_receive.setVisible(false);
 										ui_main.setVisible(true);
@@ -437,12 +439,15 @@ public class DictionaryClient extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				//对输入单词进行判断
 				String content=ui_main.input.getText();
+				if(content.length()==0){
+					JOptionPane.showMessageDialog(null, "单词不能为空", "error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 				for(int i=0;i<content.length();i++)
 					if(!(((content.charAt(i)>='a')&&(content.charAt(i)<='z'))||((content.charAt(i)>='A')&&(content.charAt(i)<='Z')))){
 							JOptionPane.showMessageDialog(null, "单词格式错误", "error", JOptionPane.ERROR_MESSAGE);
 							return;
 					}
-				
 				ui_main.searchOnceBaidu=0;
 				ui_main.searchOnceIciba=0;
 				ui_main.searchOnceYoudao=0;
@@ -514,7 +519,11 @@ public class DictionaryClient extends JFrame{
 		//点赞功能
 		ui_main.button_like_baidu.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				if(ui_main.searchOnceBaidu==0)
+				if(ui_main.input.getText().length()==0)
+					JOptionPane.showMessageDialog(null, "单词不能为空", "error", JOptionPane.ERROR_MESSAGE);
+				else if(!ui_main.check_baidu.isSelected())
+					JOptionPane.showMessageDialog(null, "不能对没选中的网络词典点赞", "error", JOptionPane.ERROR_MESSAGE);
+				else if(ui_main.searchOnceBaidu==0)
 					try{
 						int commandType=5;
 						String s="baidu";
@@ -531,7 +540,11 @@ public class DictionaryClient extends JFrame{
 		});
 		ui_main.button_like_youdao.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				if(ui_main.searchOnceYoudao==0)
+				if(ui_main.input.getText().length()==0)
+					JOptionPane.showMessageDialog(null, "单词不能为空", "error", JOptionPane.ERROR_MESSAGE);
+				else if(!ui_main.check_youdao.isSelected())
+					JOptionPane.showMessageDialog(null, "不能对没选中的网络词典点赞", "error", JOptionPane.ERROR_MESSAGE);
+				else if(ui_main.searchOnceYoudao==0)
 					try{
 						int commandType=5;
 						String s="youdao";
@@ -548,7 +561,11 @@ public class DictionaryClient extends JFrame{
 		});
 		ui_main.button_like_Iciba.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e) {
-				if(ui_main.searchOnceIciba==0)
+				if(ui_main.input.getText().length()==0)
+					JOptionPane.showMessageDialog(null, "单词不能为空", "error", JOptionPane.ERROR_MESSAGE);
+				else if(!ui_main.check_Iciba.isSelected())
+					JOptionPane.showMessageDialog(null, "不能对没选中的网络词典点赞", "error", JOptionPane.ERROR_MESSAGE);
+				else if(ui_main.searchOnceIciba==0)
 					try{
 						int commandType=5;
 						String s="bing";

@@ -3,7 +3,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.*;
-import java.sql.SQLException;
 import java.util.*;
 import javax.swing.*;
 
@@ -59,11 +58,21 @@ public class DictionaryServer extends JFrame{
 					int row=ui_server.table_left.getSelectedRow();
 					int column=ui_server.table_left.getSelectedColumn();
 					if(column==0){
-						String username=(String)ui_server.table_left.getValueAt(row,column);
+						int temp=(int)ui_server.table_left.getValueAt(row,1);
+						if(temp==1){
+							JOptionPane.showMessageDialog(null,"不能删除在线用户", "error", JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+						String username=(String)ui_server.table_left.getValueAt(row,0);
 						if(DataBase.delete(username))
 							ui_server.left_passwd_Remove(username);
 					}
 					else if(column==1){
+						int temp=(int)ui_server.table_left.getValueAt(row,1);
+						if(temp==1){
+							JOptionPane.showMessageDialog(null,"不能删除在线用户", "error", JOptionPane.ERROR_MESSAGE);
+							return;
+						}
 						String username=(String)ui_server.table_left.getValueAt(row,0);
 						if(DataBase.delete(username))
 							ui_server.left_passwd_Remove(username);
@@ -124,7 +133,6 @@ public class DictionaryServer extends JFrame{
 						String username=inputFromClient.readUTF();
 						boolean bool=DataBase.checkOnline(username);
 						outputToClient.writeBoolean(bool);
-						System.out.println(bool);
 						if(!bool)
 							continue;
 						String password=inputFromClient.readUTF();
